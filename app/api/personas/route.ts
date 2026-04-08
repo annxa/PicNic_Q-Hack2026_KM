@@ -241,6 +241,7 @@ interface DbCustomer {
   has_pets: number;
   intolerances: string | null;
   persona_name: string | null;
+  co2: number | null; // accumulated OSRM-based delivery CO₂ savings
 }
 
 interface DbOrderRow {
@@ -535,6 +536,7 @@ export async function GET() {
       .prepare(
         `SELECT c.id, c.name, c.email, c.house_hold_size, c.has_children,
                 c.diet, c.age_range, c.location, c.has_pets, c.intolerances,
+                c.co2,
                 p.name as persona_name
          FROM customers c
          LEFT JOIN personas p ON c.persona_id = p.id`
@@ -599,32 +601,14 @@ export async function GET() {
       const orders = ordersByCustomer.get(c.id) ?? [];
       const orderHistory = buildOrderHistory(orders);
 
-      // CO₂ stats
+      // CO₂ stats — all derived from orderHistory so week ≤ month ≤ total always holds
       const co2Total = orderHistory.reduce((s, o) => s + o.co2Saved, 0);
-      const co2Week = orders
-        .filter((o) => parseDate(o.creationDate) >= weekAgo)
-        .reduce(
-          (s, o) =>
-            s +
-            o.lines.reduce(
-              (ls, l) => ls + (l.carbon_footprint ?? 0) * l.quantity,
-              0
-            ) *
-              CO2_SAVING_FACTOR,
-          0
-        );
-      const co2Month = orders
-        .filter((o) => parseDate(o.creationDate) >= monthAgo)
-        .reduce(
-          (s, o) =>
-            s +
-            o.lines.reduce(
-              (ls, l) => ls + (l.carbon_footprint ?? 0) * l.quantity,
-              0
-            ) *
-              CO2_SAVING_FACTOR,
-          0
-        );
+      const co2Week = orderHistory
+        .filter((o) => new Date(o.date) >= weekAgo)
+        .reduce((s, o) => s + o.co2Saved, 0);
+      const co2Month = orderHistory
+        .filter((o) => new Date(o.date) >= monthAgo)
+        .reduce((s, o) => s + o.co2Saved, 0);
 
       // Preferred categories (by order volume)
       const catCounts: Record<string, number> = {};

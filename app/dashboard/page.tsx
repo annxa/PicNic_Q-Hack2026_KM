@@ -21,7 +21,7 @@ import { PicnicLogo } from "@/components/shared/PicnicLogo";
 import { DemoBanner } from "@/components/shared/DemoBanner";
 import { ProductCard } from "@/components/shared/ProductCard";
 import { products } from "@/lib/mock/products";
-import { cn, formatPrice, cartTotal, cartCO2 } from "@/lib/utils";
+import { cn, formatPrice, cartTotal } from "@/lib/utils";
 import { Product } from "@/types";
 import {
     bundles,
@@ -489,6 +489,8 @@ export default function DashboardPage() {
     const router = useRouter();
     const persona = useStore((s) => s.currentPersona);
     const cart = useStore((s) => s.cart);
+    const co2PerDelivery = useStore((s) => s.co2PerDelivery);
+    const fetchCo2Distance = useStore((s) => s.fetchCo2Distance);
 
     const [bundleTab, setBundleTab] = useState<"reorder" | "topup">("reorder");
 
@@ -496,11 +498,15 @@ export default function DashboardPage() {
         if (!persona) router.push("/onboarding");
     }, [persona, router]);
 
+    useEffect(() => {
+        fetchCo2Distance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     if (!persona) return null;
 
     const total = cartTotal(cart);
     const totalItems = cart.reduce((s, i) => s + i.quantity, 0);
-    const co2 = cartCO2(cart);
 
     // Personalized recommendations: products not in cart
     const inCartIds = new Set(cart.map((c) => c.product.id));
@@ -595,7 +601,9 @@ export default function DashboardPage() {
                             {totalItems} items · {formatPrice(total)}
                         </p>
                         <p className="text-white/65 text-[11px] mt-0.5">
-                            ~{co2.toFixed(1)} kg CO₂ · Tap to review
+                            {co2PerDelivery > 0
+                                ? `~${co2PerDelivery.toFixed(2)} kg CO₂ saved · Tap to review`
+                                : "Tap to review"}
                         </p>
                     </div>
                     <ChevronRight
