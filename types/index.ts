@@ -6,16 +6,16 @@ export type DietStyle =
   | "pescetarisch";
 
 export type Restriction =
-  | "laktose"
+  | "lactose"
   | "gluten"
-  | "nüsse"
+  | "nuts"
   | "vegan"
-  | "vegetarisch"
+  | "vegetarian"
   | "halal"
   | "kosher"
   | "soja"
-  | "ei"
-  | "fisch";
+  | "egg"
+  | "fish";
 
 export type CO2Score = "A" | "B" | "C" | "D" | "E";
 export type StockStatus = "verfügbar" | "knapp" | "ausverkauft";
