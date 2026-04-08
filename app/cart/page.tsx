@@ -28,7 +28,6 @@ import {
     cn,
     formatPrice,
     cartTotal,
-    cartCO2,
     co2ScoreColor,
     daysRemainingColor,
 } from "@/lib/utils";
@@ -468,18 +467,38 @@ export default function CartPage() {
     const pantry = useStore((s) => s.pantry);
     const isRegenerating = useStore((s) => s.isRegenerating);
     const regenerateCart = useStore((s) => s.regenerateCart);
+    const co2PerDelivery = useStore((s) => s.co2PerDelivery);
+    const fetchCo2Distance = useStore((s) => s.fetchCo2Distance);
+    const checkout = useStore((s) => s.checkout);
 
     const [bundleTab, setBundleTab] = useState<"reorder" | "topup">("reorder");
+    const [isCheckingOut, setIsCheckingOut] = useState(false);
+    const [checkoutDone, setCheckoutDone] = useState(false);
 
     useEffect(() => {
         if (!persona) router.push("/onboarding");
     }, [persona, router]);
 
+    useEffect(() => {
+        fetchCo2Distance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handleCheckout = async () => {
+        setIsCheckingOut(true);
+        try {
+            await checkout();
+            setCheckoutDone(true);
+            setTimeout(() => router.push("/dashboard"), 2000);
+        } catch {
+            setIsCheckingOut(false);
+        }
+    };
+
     if (!persona) return null;
 
     const total = cartTotal(cart);
     const totalItems = cart.reduce((s, i) => s + i.quantity, 0);
-    const co2 = cartCO2(cart);
 
     const lowStockItems = pantry.filter((p) => p.daysRemaining <= 3);
     const notInCart = lowStockItems.filter(
@@ -522,7 +541,10 @@ export default function CartPage() {
                             {formatPrice(total)}
                         </p>
                         <p className="text-xs text-gray-400">
-                            {totalItems} items · ~{co2.toFixed(1)} kg CO₂
+                            {totalItems} items ·{" "}
+                            {co2PerDelivery > 0
+                                ? `~${co2PerDelivery.toFixed(2)} kg CO₂ saved`
+                                : "calculating CO₂…"}
                         </p>
                     </div>
                 </div>
@@ -540,7 +562,7 @@ export default function CartPage() {
                     icon={<ShoppingBag size={16} className="text-gray-600" />}
                     title="Current Cart"
                     badge={totalItems}
-                    subtitle={`${formatPrice(total)} · ~${co2.toFixed(1)} kg CO₂`}
+                    subtitle={`${formatPrice(total)} · ${co2PerDelivery > 0 ? `~${co2PerDelivery.toFixed(2)} kg CO₂ saved` : "calculating CO₂…"}`}
                 >
                     <AnimatePresence>
                         {isRegenerating ? (
@@ -681,17 +703,51 @@ export default function CartPage() {
                         size={16}
                         className="text-emerald-600 flex-shrink-0"
                     />
-                    <p className="text-xs text-emerald-800">
-                        With this cart you save approx.{" "}
-                        <strong>{(co2 * 0.3).toFixed(1)} kg CO₂</strong> vs.
-                        supermarket
-                    </p>
+                    <div>
+                        <p className="text-xs text-emerald-800">
+                            With this order you save approx.{" "}
+                            <strong>
+                                {co2PerDelivery > 0
+                                    ? `${co2PerDelivery.toFixed(2)} kg CO₂`
+                                    : "calculating…"}
+                            </strong>{" "}
+                            vs. driving to the supermarket
+                        </p>
+                        {co2PerDelivery > 0 && (
+                            <p className="text-[10px] text-emerald-600 mt-0.5">
+                                ≈ {Math.round(co2PerDelivery * 6.3)} km of
+                                driving avoided 🚗
+                            </p>
+                        )}
+                    </div>
                 </div>
 
                 {/* Checkout CTA */}
-                <button className="w-full btn-picnic py-4 text-[16px] font-semibold flex items-center justify-center gap-2">
-                    Choose delivery slot · {formatPrice(total)}
-                </button>
+                {checkoutDone ? (
+                    <div className="w-full bg-emerald-500 rounded-2xl py-4 text-[16px] font-semibold text-white flex items-center justify-center gap-2">
+                        <Leaf size={18} />
+                        Order placed! +{co2PerDelivery.toFixed(2)} kg CO₂
+                        saved 🎉
+                    </div>
+                ) : (
+                    <button
+                        onClick={handleCheckout}
+                        disabled={isCheckingOut || cart.length === 0}
+                        className="w-full btn-picnic py-4 text-[16px] font-semibold flex items-center justify-center gap-2 disabled:opacity-60"
+                    >
+                        {isCheckingOut ? (
+                            <>
+                                <Sparkles
+                                    size={16}
+                                    className="animate-spin"
+                                />
+                                Placing order…
+                            </>
+                        ) : (
+                            `Choose delivery slot · ${formatPrice(total)}`
+                        )}
+                    </button>
+                )}
             </div>
 
             <BottomNav />

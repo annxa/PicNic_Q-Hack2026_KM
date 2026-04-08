@@ -20,6 +20,44 @@ import { getProducts } from "@/lib/api";
 import { Product } from "@/types";
 import { formatPrice, cartTotal, cartCO2 } from "@/lib/utils";
 
+// One comparison entry: a label + emoji, computed from kg saved
+const CO2_COMPARISONS: Array<{
+    compute: (kg: number) => string;
+    emoji: string;
+    suffix: string;
+}> = [
+    {
+        compute: (kg) => `${Math.round(kg / 0.15)} km`,
+        emoji: "🚗",
+        suffix: "of car driving avoided",
+    },
+    {
+        compute: (kg) => `${Math.round(kg / 0.21)}`,
+        emoji: "☕",
+        suffix: "cups of coffee equivalent",
+    },
+    {
+        compute: (kg) => `${Math.round(kg / 0.008).toLocaleString()}`,
+        emoji: "📱",
+        suffix: "smartphone charges equivalent",
+    },
+    {
+        compute: (kg) => `${Math.round(kg / 0.036)}`,
+        emoji: "📺",
+        suffix: "hours of video streaming",
+    },
+    {
+        compute: (kg) => `${(kg / 2.5).toFixed(1)}`,
+        emoji: "🍔",
+        suffix: "beef burgers worth of CO₂",
+    },
+    {
+        compute: (kg) => `${Math.round(kg / 0.0576)}`,
+        emoji: "🌳",
+        suffix: "days of tree carbon absorption",
+    },
+];
+
 function CO2ProgressCard() {
     const {
         co2SavedThisWeek,
@@ -29,8 +67,13 @@ function CO2ProgressCard() {
     } = useStore();
     const [animated, setAnimated] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
+    // Pick a random comparison once per session mount
+    const [compIdx] = useState(
+        () => Math.floor(Math.random() * CO2_COMPARISONS.length)
+    );
     const pct = Math.min(100, (co2SavedThisMonth / co2MonthlyGoal) * 100);
-    const kmEquivalent = Math.round(co2SavedThisWeek * 6.3);
+    const activeComp = CO2_COMPARISONS[compIdx];
+    const compValue = activeComp.compute(co2SavedThisMonth);
 
     useEffect(() => {
         const t = setTimeout(() => setAnimated(true), 400);
@@ -91,8 +134,9 @@ function CO2ProgressCard() {
                             </span>
                         </div>
                         <p className="text-emerald-300 text-xs mt-0.5">
-                            ≈ {Math.round(co2SavedThisMonth * 6.3)} km of
-                            driving saved 🚗
+                            {activeComp.emoji} ≈{" "}
+                            <strong className="text-white">{compValue}</strong>{" "}
+                            {activeComp.suffix}
                         </p>
                     </div>
 

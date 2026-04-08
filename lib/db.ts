@@ -6,16 +6,22 @@ const DB_PATH = path.join(process.cwd(), "picnic.db");
 declare global {
   // eslint-disable-next-line no-var
   var _picnicDb: Database.Database | undefined;
+  // eslint-disable-next-line no-var
+  var _picnicDbWrite: Database.Database | undefined;
 }
 
-function openDb(): Database.Database {
-  return new Database(DB_PATH, { readonly: true });
-}
-
-// Reuse connection across hot reloads in development
+// Read-only connection (used by all GET routes)
 const db: Database.Database =
   process.env.NODE_ENV === "production"
-    ? openDb()
-    : (global._picnicDb ?? (global._picnicDb = openDb()));
+    ? new Database(DB_PATH, { readonly: true })
+    : (global._picnicDb ??
+        (global._picnicDb = new Database(DB_PATH, { readonly: true })));
+
+// Write-enabled connection (used by mutation routes like /api/checkout)
+export const dbWrite: Database.Database =
+  process.env.NODE_ENV === "production"
+    ? new Database(DB_PATH)
+    : (global._picnicDbWrite ??
+        (global._picnicDbWrite = new Database(DB_PATH)));
 
 export default db;

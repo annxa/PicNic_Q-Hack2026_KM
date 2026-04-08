@@ -2,7 +2,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Persona, CartItem, PantryItem, Household, Restriction } from "@/types";
-import { cartTotal } from "@/lib/utils";
 
 interface Store {
   // State
@@ -15,6 +14,7 @@ interface Store {
   co2SavedThisMonth: number;
   co2MonthlyGoal: number;
   co2SavedTotal: number;
+  co2PerDelivery: number; // OSRM-calculated CO₂ saving per delivery (kg)
   isRegenerating: boolean;
 
   // Actions
@@ -26,6 +26,8 @@ interface Store {
   updateQuantity: (productId: string, delta: number) => void;
   regenerateCart: () => void;
   clearCart: () => void;
+  fetchCo2Distance: () => Promise<void>;
+  checkout: () => Promise<number>; // returns co2SavedKg
 }
 
 export const useStore = create<Store>()(
@@ -40,6 +42,7 @@ export const useStore = create<Store>()(
       co2SavedThisMonth: 0,
       co2MonthlyGoal: 5,
       co2SavedTotal: 0,
+      co2PerDelivery: 0,
       isRegenerating: false,
 
       initPersona: (persona) => {
@@ -95,13 +98,11 @@ export const useStore = create<Store>()(
         set({ isRegenerating: true });
         setTimeout(() => {
           const cart = get().cart;
-          // Simulate AI: shuffle quantities slightly and swap one item
           const newCart = cart.map((item, i) => {
             if (i === 0) return { ...item, quantity: item.quantity + 1, addedReason: "KI hat die Menge aufgestockt ✨" };
             if (i === Math.floor(cart.length / 2)) return { ...item, quantity: Math.max(1, item.quantity - 1) };
             return item;
           });
-          // Add a "new" item from pantry if not already in cart
           const persona = get().currentPersona;
           if (persona) {
             const pantryNotInCart = persona.pantry.filter(
@@ -120,6 +121,48 @@ export const useStore = create<Store>()(
       },
 
       clearCart: () => set({ cart: [] }),
+
+      fetchCo2Distance: async () => {
+        try {
+          const res = await fetch("/api/co2-distance");
+          if (!res.ok) return;
+          const { co2SavedKg } = (await res.json()) as { co2SavedKg: number };
+          set({ co2PerDelivery: co2SavedKg });
+        } catch {
+          // keep previous value / default 0
+        }
+      },
+
+      checkout: async () => {
+        const persona = get().currentPersona;
+        if (!persona) return 0;
+
+        const res = await fetch("/api/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ customerId: persona.id }),
+        });
+
+        if (!res.ok) throw new Error("Checkout failed");
+
+        const { co2SavedKg, newCo2Total } = (await res.json()) as {
+          co2SavedKg: number;
+          newCo2Total: number;
+        };
+
+        set({
+          cart: [],
+          co2SavedTotal: parseFloat(newCo2Total.toFixed(1)),
+          co2SavedThisWeek: parseFloat(
+            (get().co2SavedThisWeek + co2SavedKg).toFixed(2)
+          ),
+          co2SavedThisMonth: parseFloat(
+            (get().co2SavedThisMonth + co2SavedKg).toFixed(1)
+          ),
+        });
+
+        return co2SavedKg;
+      },
     }),
     {
       name: "picnic-store",
@@ -133,6 +176,7 @@ export const useStore = create<Store>()(
         co2SavedThisMonth: state.co2SavedThisMonth,
         co2MonthlyGoal: state.co2MonthlyGoal,
         co2SavedTotal: state.co2SavedTotal,
+        co2PerDelivery: state.co2PerDelivery,
       }),
     }
   )
