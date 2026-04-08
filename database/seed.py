@@ -217,6 +217,7 @@ class Seeder:
                 tech_savviness="low",
                 has_pets=False,
                 intolerances="",
+                co2=0.00,
                 persona_id=p["seniors"],
             ),
             # students — Jake, 22, Hamburg, tight budget
@@ -235,6 +236,7 @@ class Seeder:
                 tech_savviness="high",
                 has_pets=False,
                 intolerances="",
+                co2=0.00,
                 persona_id=p["students"],
             ),
             # biological — Sophie, 34, Munich, eco-conscious family
@@ -253,6 +255,7 @@ class Seeder:
                 tech_savviness="medium",
                 has_pets=False,
                 intolerances="",
+                co2=0.00,
                 persona_id=p["biological"],
             ),
             # regional — Hans, 45, Frankfurt, locally sourced food
@@ -271,6 +274,7 @@ class Seeder:
                 tech_savviness="medium",
                 has_pets=False,
                 intolerances="",
+                co2=0.00,
                 persona_id=p["regional"],
             ),
             # bargain_hunters — Lisa, 29, Cologne, always hunting deals
@@ -289,6 +293,7 @@ class Seeder:
                 tech_savviness="high",
                 has_pets=False,
                 intolerances="",
+                co2=0.00,
                 persona_id=p["bargain_hunters"],
             ),
             # gourmet — Antoine, 41, Düsseldorf, premium food lover
@@ -307,6 +312,7 @@ class Seeder:
                 tech_savviness="medium",
                 has_pets=False,
                 intolerances="",
+                co2=0.00,
                 persona_id=p["gourmet"],
             ),
             # pet_owners — Emma, 37, Stuttgart, two dogs at home
@@ -325,6 +331,7 @@ class Seeder:
                 tech_savviness="medium",
                 has_pets=True,
                 intolerances="",
+                co2=0.00,
                 persona_id=p["pet_owners"],
             ),
             # plant_based — Maya, 26, Leipzig, strict plant-based diet
@@ -343,6 +350,7 @@ class Seeder:
                 tech_savviness="high",
                 has_pets=False,
                 intolerances="lactose",
+                co2=0.00,
                 persona_id=p["plant_based"],
             ),
             # fitness — Tom, 31, Nuremberg, meal prep every Sunday
@@ -361,6 +369,7 @@ class Seeder:
                 tech_savviness="high",
                 has_pets=False,
                 intolerances="",
+                co2=0.00,
                 persona_id=p["fitness"],
             ),
         ])

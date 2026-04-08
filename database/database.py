@@ -2,7 +2,7 @@ import uuid
 import enum
 from sqlalchemy import (
     create_engine, Column, String, Integer, Float, Boolean,
-    DateTime, ForeignKey, Text, Table, Enum
+    DateTime, ForeignKey, Text, Table, Enum, Numeric
 )
 from sqlalchemy.types import JSON
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker, Session
@@ -92,6 +92,7 @@ class Customer(Base):
     tech_savviness  = Column(String, default="medium")      # "low" | "medium" | "high"
     has_pets        = Column(Boolean, default=False)
     intolerances    = Column(String)                        # comma-separated, e.g. "gluten,lactose"
+    co2             = Column(Numeric(precision=10, scale=2), default=0.00)  # total CO2 footprint in kg
     persona_id      = Column(String, ForeignKey("personas.id"), nullable=True)
 
     persona = relationship("Persona", back_populates="customers")
