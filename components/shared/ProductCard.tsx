@@ -6,6 +6,20 @@ import { Product } from "@/types";
 import { cn, formatPrice, co2ScoreColor } from "@/lib/utils";
 import { useStore } from "@/lib/store/useStore";
 
+// Category → tile background color (from Picnic building blocks: tile secondary colors)
+const CATEGORY_BG: Record<string, string> = {
+  "Obst & Gemüse": "#E7ECD7",
+  "Milch & Eier": "#E3EEEE",
+  "Fleisch & Fisch": "#EFDCDC",
+  "Tiefkühl": "#E3EEEE",
+  "Getränke": "#E3F0F8",
+  "Brot & Backwaren": "#F0E8DD",
+  "Snacks & Süßes": "#F5EDE0",
+  "Haushalt": "#EBE9E5",
+  "Drogerie": "#EBE9E5",
+};
+const DEFAULT_BG = "#F0E8DD";
+
 interface ProductCardProps {
   product: Product;
   reason?: string;
@@ -17,74 +31,99 @@ export function ProductCard({ product, reason, showCO2 = true, compact = false }
   const [added, setAdded] = useState(false);
   const addToCart = useStore((s) => s.addToCart);
 
-  const handleAdd = () => {
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
     addToCart({ product, quantity: 1, addedReason: reason });
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
 
+  const tileBg = CATEGORY_BG[product.category] ?? DEFAULT_BG;
+
   return (
     <motion.div
       whileTap={{ scale: 0.97 }}
       className={cn(
-        "relative flex-shrink-0 bg-white rounded-2xl shadow-card overflow-hidden",
+        "relative flex-shrink-0 bg-white rounded-2xl overflow-hidden",
         compact ? "w-36" : "w-44"
       )}
+      style={{ boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 1px 8px rgba(0,0,0,0.04)" }}
     >
-      {/* Emoji / Image */}
-      <div className={cn(
-        "flex items-center justify-center bg-gray-50",
-        compact ? "h-24 text-4xl" : "h-28 text-5xl"
-      )}>
-        <span role="img" aria-label={product.name}>{product.emoji}</span>
-      </div>
-
-      {/* CO2 Badge */}
-      {showCO2 && (
-        <span className={cn(
-          "absolute top-2 right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full",
-          co2ScoreColor(product.co2Score)
-        )}>
-          {product.co2Score}
+      {/* Product image area with category colour */}
+      <div
+        className={cn("flex items-center justify-center relative", compact ? "h-24" : "h-28")}
+        style={{ background: tileBg }}
+      >
+        <span
+          role="img"
+          aria-label={product.name}
+          className={compact ? "text-4xl" : "text-5xl"}
+        >
+          {product.emoji}
         </span>
-      )}
 
-      {/* Local note indicator */}
-      {product.localNote && (
-        <span className="absolute top-2 left-2 text-[10px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 py-0.5 rounded-full">
-          📍 lokal
-        </span>
-      )}
-
-      <div className="p-2.5">
-        <p className={cn("font-semibold text-gray-900 leading-tight line-clamp-2", compact ? "text-xs" : "text-sm")}>
-          {product.name}
-        </p>
-        <p className="text-xs text-gray-400 mt-0.5">{product.brand} · {product.unit}</p>
-
-        {product.localNote && (
-          <p className="text-[10px] text-emerald-600 mt-1 leading-tight">{product.localNote}</p>
+        {/* CO2 badge (top-right) */}
+        {showCO2 && (
+          <span className={cn(
+            "absolute top-2 right-2 text-[10px] font-semibold px-1.5 py-0.5 rounded-full text-white leading-none",
+            co2ScoreColor(product.co2Score)
+          )}>
+            {product.co2Score}
+          </span>
         )}
 
-        {reason && (
-          <p className="text-[10px] text-gray-500 mt-1 leading-tight line-clamp-2 italic">
+        {/* Local badge (top-left) */}
+        {product.localNote && (
+          <span className="absolute top-2 left-2 text-[10px] bg-white/90 text-[#3E8B3E] font-semibold px-1.5 py-0.5 rounded-full leading-none">
+            📍 lokal
+          </span>
+        )}
+      </div>
+
+      {/* Card body */}
+      <div className="p-2.5">
+        {/* Highlight / reason label — styled like Picnic's category caption */}
+        {reason && !compact && (
+          <p className="text-[10px] font-medium text-[#9C6D2B] mb-0.5 leading-tight line-clamp-1">
             {reason}
           </p>
         )}
 
-        <div className="flex items-center justify-between mt-2">
-          <span className="text-sm font-bold text-gray-900">{formatPrice(product.price)}</span>
+        {/* Product name — Subtitle 1: 14–16px Medium */}
+        <p className={cn(
+          "font-medium text-gray-900 leading-snug line-clamp-2",
+          compact ? "text-xs" : "text-[13px]"
+        )}>
+          {product.name}
+        </p>
+
+        {/* Brand — Body 2: 14px Regular, gray */}
+        <p className="text-[11px] text-[#9B9B9B] mt-0.5 leading-tight truncate">
+          {product.brand}
+        </p>
+
+        <div className="flex items-end justify-between mt-2 gap-1">
+          <div className="min-w-0">
+            {/* Price — Bold, black */}
+            <span className={cn("font-bold text-gray-900 leading-tight", compact ? "text-sm" : "text-[15px]")}>
+              {formatPrice(product.price)}
+            </span>
+            {/* Unit — Caption 1: 12px, gray */}
+            <p className="text-[10px] text-[#9B9B9B] leading-tight truncate">{product.unit}</p>
+          </div>
+
+          {/* Add button — green circle per Picnic PDP style */}
           <button
             onClick={handleAdd}
             className={cn(
-              "w-7 h-7 flex items-center justify-center rounded-full transition-all",
+              "w-7 h-7 flex-shrink-0 flex items-center justify-center rounded-full transition-all duration-150",
               added
-                ? "bg-emerald-500 text-white"
-                : "bg-[#E1141C] text-white active:scale-90"
+                ? "bg-emerald-500 text-white scale-95"
+                : "btn-picnic-green"
             )}
             aria-label={`${product.name} hinzufügen`}
           >
-            {added ? <Check size={14} strokeWidth={2.5} /> : <Plus size={14} strokeWidth={2.5} />}
+            {added ? <Check size={13} strokeWidth={2.5} /> : <Plus size={13} strokeWidth={2.5} />}
           </button>
         </div>
       </div>

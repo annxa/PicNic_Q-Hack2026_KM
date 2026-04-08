@@ -122,15 +122,15 @@ export default function PantryPage() {
     : 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-[#F5F4F0] pb-24">
       <DemoBanner />
 
       {/* Header */}
       <div className="bg-white px-5 pt-5 pb-4">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h1 className="text-xl font-black text-gray-900">Vorratsschrank</h1>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <h1 className="text-[28px] font-semibold text-gray-900 tracking-tight">Vorratsschrank</h1>
+            <p className="text-[12px] text-[#9B9B9B] mt-0.5">
               Automatisch aktualisiert nach jeder Bestellung
             </p>
           </div>
@@ -172,7 +172,7 @@ export default function PantryPage() {
                   ? f === "urgent"
                     ? "bg-orange-500 text-white"
                     : "bg-[#E1141C] text-white"
-                  : "bg-gray-100 text-gray-600"
+                  : "bg-[#EFEEE9] text-[#6D6D6D]"
               )}
             >
               {f === "all" && "Alle"}

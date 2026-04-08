@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Picnic+ | Hyperpersonalisiertes Shopping",
@@ -14,8 +22,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de">
-      <body className="bg-gray-100 min-h-screen">
-        <div className="phone-frame shadow-2xl">
+      <body className={`${inter.variable} bg-[#F5F4F0] min-h-screen`}>
+        <div className="phone-frame">
           {children}
         </div>
       </body>

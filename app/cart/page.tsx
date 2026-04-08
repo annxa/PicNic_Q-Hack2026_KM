@@ -384,13 +384,13 @@ export default function CartPage() {
   }[persona.id] ?? "";
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-[#F5F4F0] pb-24">
       <DemoBanner />
 
       {/* Header */}
-      <div className="bg-white px-5 pt-5 pb-4 sticky top-0 z-30 shadow-sm">
+      <div className="bg-white px-5 pt-5 pb-4 sticky top-0 z-30" style={{ boxShadow: "0 1px 0 rgba(0,0,0,0.06)" }}>
         <div className="flex items-center justify-between mb-1">
-          <h1 className="text-xl font-black text-gray-900">Warenkorb</h1>
+          <h1 className="text-[28px] font-semibold text-gray-900 tracking-tight">Warenkorb</h1>
           <div className="text-right">
             <p className="text-lg font-black text-gray-900">{formatPrice(total)}</p>
             <p className="text-xs text-gray-400">{totalItems} Artikel · ~{co2.toFixed(1)} kg CO₂</p>
@@ -493,7 +493,7 @@ export default function CartPage() {
                   "flex-1 py-2 rounded-xl text-xs font-bold transition-all",
                   bundleTab === tab
                     ? "bg-[#E1141C] text-white"
-                    : "bg-gray-100 text-gray-600"
+                    : "bg-[#EFEEE9] text-[#6D6D6D]"
                 )}
               >
                 {tab === "reorder" ? "🔄 Nochmal bestellen" : "➕ Kategorien auffrischen"}
@@ -536,9 +536,8 @@ export default function CartPage() {
         </div>
 
         {/* Checkout CTA */}
-        <button className="w-full btn-picnic py-4 text-base flex items-center justify-center gap-2">
-          <ShoppingBag size={18} />
-          Bestellen · {formatPrice(total)}
+        <button className="w-full btn-picnic py-4 text-[16px] font-semibold flex items-center justify-center gap-2">
+          Kies bezorgmoment · {formatPrice(total)}
         </button>
       </div>
 

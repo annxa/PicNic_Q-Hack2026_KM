@@ -80,22 +80,23 @@ export default function OnboardingPage() {
 
       {/* Header */}
       <div className="px-5 pt-6 pb-4">
-        {/* Logo */}
-        <div className="flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 bg-[#E1141C] rounded-xl flex items-center justify-center">
-            <span className="text-white text-xl font-black">P</span>
+        {/* PIC NIC Logo */}
+        <div className="flex items-center gap-2.5 mb-6">
+          <div className="w-10 h-10 bg-[#E1141C] rounded-[11px] flex flex-col items-center justify-center gap-0">
+            <span className="text-white font-bold text-[10px] leading-tight tracking-tight">PIC</span>
+            <span className="text-white font-bold text-[10px] leading-tight tracking-tight">NIC</span>
           </div>
-          <span className="text-xl font-black text-gray-900">Picnic<span className="text-[#E1141C]">+</span></span>
+          <span className="text-[22px] font-semibold text-gray-900 tracking-tight">picnic<span className="text-[#E1141C] font-bold">+</span></span>
         </div>
 
-        {/* Progress dots */}
-        <div className="flex gap-2 mb-4">
+        {/* Progress indicator */}
+        <div className="flex gap-1.5 mb-4">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
               className={cn(
-                "h-1.5 rounded-full transition-all duration-300",
-                i === step ? "bg-[#E1141C] w-8" : i < step ? "bg-[#E1141C] opacity-40 w-4" : "bg-gray-200 w-4"
+                "h-1 rounded-full transition-all duration-300",
+                i === step ? "bg-[#E1141C] w-10" : i < step ? "bg-[#E1141C]/40 w-5" : "bg-[#E2E1DD] w-5"
               )}
             />
           ))}
@@ -121,10 +122,10 @@ export default function OnboardingPage() {
               transition={{ duration: 0.22 }}
               className="px-5"
             >
-              <h1 className="text-2xl font-black text-gray-900 mb-1">
+              <h1 className="text-[28px] font-semibold text-gray-900 mb-1 tracking-tight">
                 Wer bist du?
               </h1>
-              <p className="text-sm text-gray-500 mb-5">
+              <p className="text-sm text-[#9B9B9B] mb-5">
                 Wir personalisieren deinen Einkauf sofort.
               </p>
 
@@ -136,8 +137,8 @@ export default function OnboardingPage() {
                     className={cn(
                       "w-full text-left rounded-2xl border-2 p-4 transition-all tap-active",
                       selectedPersona?.id === persona.id
-                        ? "border-[#E1141C] bg-[#FFF0F0]"
-                        : "border-gray-100 bg-gray-50 hover:border-gray-200"
+                        ? "border-[#E1141C] bg-[#FDECEA]"
+                        : "border-[#E2E1DD] bg-white"
                     )}
                   >
                     <div className="flex items-start gap-3">
@@ -169,10 +170,10 @@ export default function OnboardingPage() {
               transition={{ duration: 0.22 }}
               className="px-5"
             >
-              <h1 className="text-2xl font-black text-gray-900 mb-1">
+              <h1 className="text-[28px] font-semibold text-gray-900 mb-1 tracking-tight">
                 Dein Haushalt
               </h1>
-              <p className="text-sm text-gray-500 mb-6">
+              <p className="text-sm text-[#9B9B9B] mb-6">
                 Schon vorausgefüllt – pass gerne an.
               </p>
 
@@ -187,10 +188,10 @@ export default function OnboardingPage() {
                       key={n}
                       onClick={() => setHouseholdSize(n)}
                       className={cn(
-                        "w-12 h-12 rounded-2xl text-sm font-bold border-2 transition-all",
+                        "w-12 h-12 rounded-full text-sm font-semibold border transition-all",
                         householdSize === n
                           ? "bg-[#E1141C] border-[#E1141C] text-white"
-                          : "bg-gray-50 border-gray-200 text-gray-700"
+                          : "bg-white border-[#E2E1DD] text-[#3D3D3D]"
                       )}
                     >
                       {n}
@@ -234,10 +235,10 @@ export default function OnboardingPage() {
                       key={opt.id}
                       onClick={() => setDietStyle(opt.id)}
                       className={cn(
-                        "px-4 py-2 rounded-full text-sm font-semibold border-2 transition-all",
+                        "px-4 py-2 rounded-full text-sm font-medium border transition-all",
                         dietStyle === opt.id
                           ? "bg-[#E1141C] border-[#E1141C] text-white"
-                          : "bg-gray-50 border-gray-200 text-gray-700"
+                          : "bg-white border-[#E2E1DD] text-[#3D3D3D]"
                       )}
                     >
                       {opt.label}
@@ -258,10 +259,10 @@ export default function OnboardingPage() {
               transition={{ duration: 0.22 }}
               className="px-5"
             >
-              <h1 className="text-2xl font-black text-gray-900 mb-1">
+              <h1 className="text-[28px] font-semibold text-gray-900 mb-1 tracking-tight">
                 Unverträglichkeiten
               </h1>
-              <p className="text-sm text-gray-500 mb-5">
+              <p className="text-sm text-[#9B9B9B] mb-5">
                 Was sollen wir immer im Blick behalten?
               </p>
 
@@ -271,10 +272,10 @@ export default function OnboardingPage() {
                     key={opt.id}
                     onClick={() => toggleRestriction(opt.id)}
                     className={cn(
-                      "flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-semibold border-2 transition-all",
+                      "flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium border transition-all",
                       activeRestrictions.includes(opt.id)
                         ? "bg-[#E1141C] border-[#E1141C] text-white"
-                        : "bg-gray-50 border-gray-200 text-gray-700"
+                        : "bg-white border-[#E2E1DD] text-[#3D3D3D]"
                     )}
                   >
                     <span>{opt.emoji}</span>
@@ -311,7 +312,7 @@ export default function OnboardingPage() {
         {step > 0 && (
           <button
             onClick={() => setStep(step - 1)}
-            className="w-12 h-14 flex items-center justify-center rounded-2xl bg-gray-100 text-gray-500 flex-shrink-0"
+            className="w-14 h-14 flex items-center justify-center rounded-full bg-[#EFEEE9] text-[#6D6D6D] flex-shrink-0 tap-active"
           >
             <ChevronLeft size={20} />
           </button>
@@ -328,7 +329,7 @@ export default function OnboardingPage() {
           }}
           disabled={step === 0 && !selectedPersona}
           className={cn(
-            "flex-1 h-14 btn-picnic flex items-center justify-center gap-2 text-base disabled:opacity-40 disabled:cursor-not-allowed"
+            "flex-1 h-14 btn-picnic flex items-center justify-center gap-2 text-base"
           )}
         >
           {step < 2 ? (

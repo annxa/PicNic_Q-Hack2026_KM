@@ -262,7 +262,7 @@ export const personas: Persona[] = [
     avatar: "🏠",
     tagline: "3 Personen · Vegetarisch · ~120 €/Woche",
     description: "Budgetbewusst & grün. Meal Prep Sonntag ist heilig, Hülsenfrüchte die beste Freunde.",
-    household: { size: 3, weeklyBudget: 120, dietStyle: "vegetarisch", restrictions: ["fleisch"], hasKids: false },
+    household: { size: 3, weeklyBudget: 120, dietStyle: "vegetarisch", restrictions: ["fisch"], hasKids: false },
     defaultRestrictions: ["vegetarisch"],
     pantry: wgPantry,
     orderHistory: wgHistory,

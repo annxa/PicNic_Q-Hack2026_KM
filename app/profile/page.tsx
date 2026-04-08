@@ -22,18 +22,18 @@ export default function ProfilePage() {
   const totalCO2 = currentPersona.orderHistory.reduce((s, o) => s + o.co2Saved, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-[#F5F4F0] pb-24">
       <DemoBanner />
 
       {/* Hero */}
-      <div className="bg-[#E1141C] px-5 pt-6 pb-8">
+      <div className="bg-[#E1141C] px-5 pt-6 pb-10">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-4xl">
             {currentPersona.avatar}
           </div>
           <div>
-            <h1 className="text-xl font-black text-white">{currentPersona.name}</h1>
-            <p className="text-white/70 text-sm">{currentPersona.tagline}</p>
+            <h1 className="text-[22px] font-semibold text-white tracking-tight">{currentPersona.name}</h1>
+            <p className="text-white/70 text-[13px]">{currentPersona.tagline}</p>
           </div>
         </div>
       </div>
