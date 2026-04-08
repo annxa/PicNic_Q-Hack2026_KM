@@ -23,11 +23,7 @@ import { ProductCard } from "@/components/shared/ProductCard";
 import { products } from "@/lib/mock/products";
 import { cn, formatPrice, cartTotal } from "@/lib/utils";
 import { Product } from "@/types";
-import {
-    bundles,
-    mealSuggestions,
-    popularProducts,
-} from "@/lib/mock/suggestions";
+import { mealSuggestions, popularProducts } from "@/lib/mock/suggestions";
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
 function Section({
@@ -151,8 +147,8 @@ function CO2ProgressCard() {
     const [animated, setAnimated] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
     // Pick a random comparison once per session mount
-    const [compIdx] = useState(
-        () => Math.floor(Math.random() * CO2_COMPARISONS.length)
+    const [compIdx] = useState(() =>
+        Math.floor(Math.random() * CO2_COMPARISONS.length),
     );
     const pct = Math.min(100, (co2SavedThisMonth / co2MonthlyGoal) * 100);
     const activeComp = CO2_COMPARISONS[compIdx];
@@ -489,13 +485,16 @@ export default function DashboardPage() {
     const router = useRouter();
     const persona = useStore((s) => s.currentPersona);
     const cart = useStore((s) => s.cart);
+    const storeBundles = useStore((s) => s.bundles);
+    const fetchBundles = useStore((s) => s.fetchBundles);
     const co2PerDelivery = useStore((s) => s.co2PerDelivery);
     const fetchCo2Distance = useStore((s) => s.fetchCo2Distance);
 
-    const [bundleTab, setBundleTab] = useState<"reorder" | "topup">("reorder");
+    const [bundleTab, setBundleTab] = useState<"reorder" | "topup">("topup");
 
     useEffect(() => {
         if (!persona) router.push("/onboarding");
+        else fetchBundles();
     }, [persona, router]);
 
     useEffect(() => {
@@ -518,13 +517,10 @@ export default function DashboardPage() {
         )
         .slice(0, 8);
 
-    const personaBundles = bundles[persona.id] ?? [];
     const personaPopular = popularProducts[persona.id] ?? [];
 
-    const reorderBundles = personaBundles.filter(
-        (b) => b.category === "reorder",
-    );
-    const topupBundles = personaBundles.filter((b) => b.category === "topup");
+    const reorderBundles = storeBundles.filter((b) => b.category === "reorder");
+    const topupBundles = storeBundles.filter((b) => b.category === "topup");
     const activeBundles =
         bundleTab === "reorder" ? reorderBundles : topupBundles;
 
@@ -642,7 +638,7 @@ export default function DashboardPage() {
                     </div>
                 </section>
 
-                {/* Popular in region */}
+                {/*}
                 <section>
                     <div className="flex items-baseline justify-between mb-1">
                         <h2 className="text-[18px] font-semibold text-gray-900 tracking-tight">
@@ -664,7 +660,7 @@ export default function DashboardPage() {
                             />
                         ))}
                     </div>
-                </section>
+                </section>*/}
 
                 {/* ─── Section 3c: Bundles ─── */}
                 <Section

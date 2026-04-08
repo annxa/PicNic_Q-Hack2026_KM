@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Persona, CartItem, PantryItem, Household, Restriction } from "@/types";
+import { Persona, CartItem, PantryItem, Household, Restriction, Bundle } from "@/types";
 
 interface Store {
   // State
@@ -9,6 +9,7 @@ interface Store {
   household: Household | null;
   restrictions: Restriction[];
   cart: CartItem[];
+  bundles: Bundle[];
   pantry: PantryItem[];
   co2SavedThisWeek: number;
   co2SavedThisMonth: number;
@@ -25,6 +26,7 @@ interface Store {
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, delta: number) => void;
   regenerateCart: () => Promise<void>;
+  fetchBundles: () => Promise<void>;
   clearCart: () => void;
   fetchCo2Distance: () => Promise<void>;
   checkout: () => Promise<number>; // returns co2SavedKg
@@ -37,6 +39,7 @@ export const useStore = create<Store>()(
       household: null,
       restrictions: [],
       cart: [],
+      bundles: [],
       pantry: [],
       co2SavedThisWeek: 0,
       co2SavedThisMonth: 0,
@@ -106,6 +109,19 @@ export const useStore = create<Store>()(
         } catch (err) {
           console.error("[regenerateCart]", err);
           set({ isRegenerating: false });
+        }
+      },
+
+      fetchBundles: async () => {
+        const persona = get().currentPersona;
+        if (!persona) return;
+        try {
+          const res = await fetch(`/api/packages/suggest?customerId=${persona.id}`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const bundles: Bundle[] = await res.json();
+          set({ bundles });
+        } catch (err) {
+          console.error("[fetchBundles]", err);
         }
       },
 

@@ -155,7 +155,7 @@ function buildCartPredictionPrompt(
     "- Return as many items as the customer usually orders, ranked by confidence (highest first).\n" +
     "- Respect the customer's diet restrictions and intolerances.\n" +
     "- Consider reorder frequency, quantities, and household size.\n" +
-    "- The reasoning provided is for the customer's benefit and should be concise but informative.\n" +
+    "- The reasoning provided is for the customer's benefit and should be concise but informative Make sure to address the customer.\n" +
     "- Respond ONLY with a valid JSON array. No prose, no markdown fences.";
 
   const user =
