@@ -91,7 +91,7 @@ export function articleToProduct(a: DbArticle): Product {
       tags = [...tags, ...JSON.parse(a.allergy_labels)];
     }
   } catch {}
-  if (a.is_biological) tags = [...new Set([...tags, "bio"])];
+  if (a.is_biological && !tags.includes("bio")) tags = [...tags, "bio"];
 
   return {
     id: a.id,
