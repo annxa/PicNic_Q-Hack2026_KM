@@ -16,62 +16,153 @@ import type {
 
 // ── Enrichment lookup tables ──────────────────────────────────────────────────
 
+type SpendingBehavior = "frugal" | "moderate" | "lavish";
+type Frequency = "daily" | "weekly" | "bi-weekly" | "monthly";
+type Level = "low" | "medium" | "high";
+
 const PERSONA_META: Record<
   string,
-  { avatar: string; color: string; description: string }
+  {
+    avatar: string;
+    color: string;
+    description: string;
+    spendingBehavior: SpendingBehavior;
+    shoppingFrequency: Frequency;
+    priceSensitivity: Level;
+    environmentalAwareness: Level;
+    brandLoyalty: Level;
+    noveltyOrientation: Level;
+    recipeInterest: Level;
+  }
 > = {
   seniors: {
     avatar: "👴",
     color: "#6B7280",
     description:
-      "Verlässliche Gewohnheiten, bekannte Marken, übersichtlicher Wochenkorb.",
+      "Reliable habits, familiar brands, and a tidy weekly basket.",
+    spendingBehavior: "moderate",
+    shoppingFrequency: "weekly",
+    priceSensitivity: "medium",
+    environmentalAwareness: "low",
+    brandLoyalty: "high",
+    noveltyOrientation: "low",
+    recipeInterest: "low",
   },
   students: {
     avatar: "🧑‍🎓",
     color: "#3B82F6",
     description:
-      "Budget-bewusst und hungrig. Brot, Eier & Nudeln sind die Basis.",
+      "Budget-conscious and hungry. Bread, eggs & pasta are the essentials.",
+    spendingBehavior: "frugal",
+    shoppingFrequency: "weekly",
+    priceSensitivity: "high",
+    environmentalAwareness: "low",
+    brandLoyalty: "low",
+    noveltyOrientation: "medium",
+    recipeInterest: "low",
   },
   biological: {
     avatar: "🌿",
     color: "#10B981",
     description:
-      "Bio ist Pflicht, CO₂-Fußabdruck immer im Blick. Gemüse-Liebhaberin.",
+      "Organic is non-negotiable, CO₂ footprint always in mind. A true veggie lover.",
+    spendingBehavior: "lavish",
+    shoppingFrequency: "weekly",
+    priceSensitivity: "low",
+    environmentalAwareness: "high",
+    brandLoyalty: "medium",
+    noveltyOrientation: "medium",
+    recipeInterest: "high",
   },
   regional: {
     avatar: "🏡",
     color: "#F59E0B",
     description:
-      "Lokal & saisonal – direkt vom Erzeuger, frisch aus der Region.",
+      "Local & seasonal – straight from the producer, fresh from the region.",
+    spendingBehavior: "moderate",
+    shoppingFrequency: "weekly",
+    priceSensitivity: "low",
+    environmentalAwareness: "high",
+    brandLoyalty: "medium",
+    noveltyOrientation: "low",
+    recipeInterest: "medium",
   },
   bargain_hunters: {
     avatar: "💰",
     color: "#8B5CF6",
-    description: "Immer auf der Jagd nach dem besten Preis. Große Mengen, kleine Preise.",
+    description: "Always hunting for the best deal. Bulk quantities, lowest prices.",
+    spendingBehavior: "frugal",
+    shoppingFrequency: "bi-weekly",
+    priceSensitivity: "high",
+    environmentalAwareness: "low",
+    brandLoyalty: "low",
+    noveltyOrientation: "low",
+    recipeInterest: "low",
   },
   gourmet: {
     avatar: "👨‍🍳",
     color: "#EF4444",
     description:
-      "Kochen als Passion. Qualität vor Preis, Vielfalt ist alles.",
+      "Cooking is a passion. Quality over price, variety is everything.",
+    spendingBehavior: "lavish",
+    shoppingFrequency: "daily",
+    priceSensitivity: "low",
+    environmentalAwareness: "medium",
+    brandLoyalty: "medium",
+    noveltyOrientation: "high",
+    recipeInterest: "high",
   },
   pet_owners: {
     avatar: "🐾",
     color: "#F97316",
     description:
-      "Einkaufen für Mensch und Tier. Hähnchen kommt immer in den Korb.",
+      "Shopping for both people and pets. Chicken always ends up in the basket.",
+    spendingBehavior: "moderate",
+    shoppingFrequency: "weekly",
+    priceSensitivity: "medium",
+    environmentalAwareness: "low",
+    brandLoyalty: "medium",
+    noveltyOrientation: "low",
+    recipeInterest: "low",
   },
   plant_based: {
     avatar: "🥦",
     color: "#22C55E",
     description:
-      "100 % pflanzlich, 0 % Kompromisse. Gemüse, OJ und Vielfalt.",
+      "100% plant-based, 0% compromise. Vegetables, OJ, and variety.",
+    spendingBehavior: "moderate",
+    shoppingFrequency: "weekly",
+    priceSensitivity: "medium",
+    environmentalAwareness: "high",
+    brandLoyalty: "low",
+    noveltyOrientation: "high",
+    recipeInterest: "high",
   },
   fitness: {
     avatar: "💪",
     color: "#0EA5E9",
     description:
-      "Meal Prep jeden Sonntag. Protein first – Hähnchen, Eier, Brokkoli.",
+      "Meal prep every Sunday. Protein first – chicken, eggs, broccoli.",
+    spendingBehavior: "moderate",
+    shoppingFrequency: "weekly",
+    priceSensitivity: "medium",
+    environmentalAwareness: "medium",
+    brandLoyalty: "medium",
+    noveltyOrientation: "low",
+    recipeInterest: "high",
+  },
+  family: {
+    avatar: "👨‍👩‍👧",
+    color: "#00B3B3",
+    description:
+      "Feeding the whole family. Practical, balanced, and always stocked up.",
+    spendingBehavior: "moderate",
+    shoppingFrequency: "bi-weekly",
+    priceSensitivity: "medium",
+    environmentalAwareness: "medium",
+    brandLoyalty: "medium",
+    noveltyOrientation: "low",
+    recipeInterest: "high",
   },
 };
 
