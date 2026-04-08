@@ -321,6 +321,12 @@ export default function CartPage() {
     const pantry = useStore((s) => s.pantry);
     const isRegenerating = useStore((s) => s.isRegenerating);
     const regenerateCart = useStore((s) => s.regenerateCart);
+    const co2PerDelivery = useStore((s) => s.co2PerDelivery);
+    const fetchCo2Distance = useStore((s) => s.fetchCo2Distance);
+    const checkout = useStore((s) => s.checkout);
+
+    const [isCheckingOut, setIsCheckingOut] = useState(false);
+    const [checkoutDone, setCheckoutDone] = useState(false);
 
     useEffect(() => {
         if (!persona) router.push("/onboarding");
