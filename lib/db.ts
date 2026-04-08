@@ -1,7 +1,7 @@
 import Database from "better-sqlite3";
 import path from "path";
 
-const DB_PATH = path.join(process.cwd(), "picnic.db");
+const DB_PATH = path.join(process.cwd(), "backend", "picnic.db");
 
 declare global {
   // eslint-disable-next-line no-var
