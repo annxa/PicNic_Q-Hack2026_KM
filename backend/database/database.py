@@ -1,5 +1,6 @@
 import uuid
 import enum
+import os
 from sqlalchemy import (
     create_engine, Column, String, Integer, Float, Boolean,
     DateTime, ForeignKey, Text, Table, Enum, Numeric
@@ -18,7 +19,8 @@ class Level(enum.Enum):
     high      = "high"
     very_high = "very_high"
 
-DATABASE_URL = "sqlite:///./picnic.db"
+_DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "picnic.db"))
+DATABASE_URL = f"sqlite:///{_DB_PATH}"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
