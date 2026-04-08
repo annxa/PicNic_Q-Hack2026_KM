@@ -27,3 +27,29 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+
+# sqlite database
+*.db
+*.sqlite
+*.sqlite3
+
+# ide
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# misc
+*.log
+*.tmp
+*.bak
+Thumbs.db
