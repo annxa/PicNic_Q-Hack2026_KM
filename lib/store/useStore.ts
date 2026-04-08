@@ -24,7 +24,7 @@ interface Store {
   addToCart: (item: CartItem) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, delta: number) => void;
-  regenerateCart: () => void;
+  regenerateCart: () => Promise<void>;
   clearCart: () => void;
   fetchCo2Distance: () => Promise<void>;
   checkout: () => Promise<number>; // returns co2SavedKg
@@ -94,30 +94,19 @@ export const useStore = create<Store>()(
         });
       },
 
-      regenerateCart: () => {
+      regenerateCart: async () => {
+        const persona = get().currentPersona;
+        if (!persona) return;
         set({ isRegenerating: true });
-        setTimeout(() => {
-          const cart = get().cart;
-          const newCart = cart.map((item, i) => {
-            if (i === 0) return { ...item, quantity: item.quantity + 1, addedReason: "KI hat die Menge aufgestockt ✨" };
-            if (i === Math.floor(cart.length / 2)) return { ...item, quantity: Math.max(1, item.quantity - 1) };
-            return item;
-          });
-          const persona = get().currentPersona;
-          if (persona) {
-            const pantryNotInCart = persona.pantry.filter(
-              (pi) => !newCart.find((c) => c.product.id === pi.product.id) && pi.daysRemaining < 5
-            );
-            if (pantryNotInCart.length > 0) {
-              newCart.push({
-                product: pantryNotInCart[0].product,
-                quantity: 1,
-                addedReason: "KI hat nachgefüllt – bald leer! ✨",
-              });
-            }
-          }
-          set({ cart: newCart, isRegenerating: false });
-        }, 1800);
+        try {
+          const res = await fetch(`/api/cart/predict?customerId=${persona.id}`);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const cartItems: CartItem[] = await res.json();
+          set({ cart: cartItems, isRegenerating: false });
+        } catch (err) {
+          console.error("[regenerateCart]", err);
+          set({ isRegenerating: false });
+        }
       },
 
       clearCart: () => set({ cart: [] }),

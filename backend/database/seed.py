@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 try:
-    from database.database import SessionLocal, Customer, Article, Stock, FC, Hub, Ingredient, Package, Persona, Level, Order, Orderline
+    from backend.database.database import SessionLocal, Customer, Article, Stock, FC, Hub, Ingredient, Package, Persona, Level, Order, Orderline
 except ModuleNotFoundError:
     from database import SessionLocal, Customer, Article, Stock, FC, Hub, Ingredient, Package, Persona, Level, Order, Orderline
 
@@ -433,6 +433,6 @@ if __name__ == "__main__":
     try:
         from database import reset_db
     except ModuleNotFoundError:
-        from database.database import reset_db
+        from backend.database.database import reset_db
     reset_db()
     Seeder().run()
