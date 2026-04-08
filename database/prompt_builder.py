@@ -158,7 +158,135 @@ class PromptBuilder:
         self._history: OrderHistory | None = None
         self._catalog: ProductCatalog | None = None
         self._existing_packages: ExistingPackages | None = None
-
+        self._personas = """seniors: {
+                        avatar: "👴",
+                        color: "#6B7280",
+                        description:
+                        "Reliable habits, familiar brands, and a tidy weekly basket.",
+                        spendingBehavior: "moderate",
+                        shoppingFrequency: "weekly",
+                        priceSensitivity: "medium",
+                        environmentalAwareness: "low",
+                        brandLoyalty: "high",
+                        noveltyOrientation: "low",
+                        recipeInterest: "low",
+                    },
+                    students: {
+                        avatar: "🧑‍🎓",
+                        color: "#3B82F6",
+                        description:
+                        "Budget-conscious and hungry. Bread, eggs & pasta are the essentials.",
+                        spendingBehavior: "frugal",
+                        shoppingFrequency: "weekly",
+                        priceSensitivity: "high",
+                        environmentalAwareness: "low",
+                        brandLoyalty: "low",
+                        noveltyOrientation: "medium",
+                        recipeInterest: "low",
+                    },
+                    biological: {
+                        avatar: "🌿",
+                        color: "#10B981",
+                        description:
+                        "Organic is non-negotiable, CO₂ footprint always in mind. A true veggie lover.",
+                        spendingBehavior: "lavish",
+                        shoppingFrequency: "weekly",
+                        priceSensitivity: "low",
+                        environmentalAwareness: "high",
+                        brandLoyalty: "medium",
+                        noveltyOrientation: "medium",
+                        recipeInterest: "high",
+                    },
+                    regional: {
+                        avatar: "🏡",
+                        color: "#F59E0B",
+                        description:
+                        "Local & seasonal – straight from the producer, fresh from the region.",
+                        spendingBehavior: "moderate",
+                        shoppingFrequency: "weekly",
+                        priceSensitivity: "low",
+                        environmentalAwareness: "high",
+                        brandLoyalty: "medium",
+                        noveltyOrientation: "low",
+                        recipeInterest: "medium",
+                    },
+                    bargain_hunters: {
+                        avatar: "💰",
+                        color: "#8B5CF6",
+                        description: "Always hunting for the best deal. Bulk quantities, lowest prices.",
+                        spendingBehavior: "frugal",
+                        shoppingFrequency: "bi-weekly",
+                        priceSensitivity: "high",
+                        environmentalAwareness: "low",
+                        brandLoyalty: "low",
+                        noveltyOrientation: "low",
+                        recipeInterest: "low",
+                    },
+                    gourmet: {
+                        avatar: "👨‍🍳",
+                        color: "#EF4444",
+                        description:
+                        "Cooking is a passion. Quality over price, variety is everything.",
+                        spendingBehavior: "lavish",
+                        shoppingFrequency: "daily",
+                        priceSensitivity: "low",
+                        environmentalAwareness: "medium",
+                        brandLoyalty: "medium",
+                        noveltyOrientation: "high",
+                        recipeInterest: "high",
+                    },
+                    pet_owners: {
+                        avatar: "🐾",
+                        color: "#F97316",
+                        description:
+                        "Shopping for both people and pets. Chicken always ends up in the basket.",
+                        spendingBehavior: "moderate",
+                        shoppingFrequency: "weekly",
+                        priceSensitivity: "medium",
+                        environmentalAwareness: "low",
+                        brandLoyalty: "medium",
+                        noveltyOrientation: "low",
+                        recipeInterest: "low",
+                    },
+                    plant_based: {
+                        avatar: "🥦",
+                        color: "#22C55E",
+                        description:
+                        "100% plant-based, 0% compromise. Vegetables, OJ, and variety.",
+                        spendingBehavior: "moderate",
+                        shoppingFrequency: "weekly",
+                        priceSensitivity: "medium",
+                        environmentalAwareness: "high",
+                        brandLoyalty: "low",
+                        noveltyOrientation: "high",
+                        recipeInterest: "high",
+                    },
+                    fitness: {
+                        avatar: "💪",
+                        color: "#0EA5E9",
+                        description:
+                        "Meal prep every Sunday. Protein first – chicken, eggs, broccoli.",
+                        spendingBehavior: "moderate",
+                        shoppingFrequency: "weekly",
+                        priceSensitivity: "medium",
+                        environmentalAwareness: "medium",
+                        brandLoyalty: "medium",
+                        noveltyOrientation: "low",
+                        recipeInterest: "high",
+                    },
+                    family: {
+                        avatar: "👨‍👩‍👧",
+                        color: "#00B3B3",
+                        description:
+                        "Feeding the whole family. Practical, balanced, and always stocked up.",
+                        spendingBehavior: "moderate",
+                        shoppingFrequency: "bi-weekly",
+                        priceSensitivity: "medium",
+                        environmentalAwareness: "medium",
+                        brandLoyalty: "medium",
+                        noveltyOrientation: "low",
+                        recipeInterest: "high",
+                    }"""
     # -- Fluent setters -------------------------------------------------------
 
     def with_customer(self, ctx: CustomerContext) -> "PromptBuilder":
@@ -182,6 +310,7 @@ class PromptBuilder:
         return self
 
     # -- Prompt factories -----------------------------------------------------
+    
 
     def build_profile_update_prompt(self) -> "BuiltPrompt":
         """
@@ -207,8 +336,8 @@ class PromptBuilder:
             "online grocery service. Your job is to analyse a customer's latest order "
             "together with their purchase history and decide whether their stored "
             "profile attributes need updating.\n\n"
-            "Available persona labels: seniors, students, biological, regional, "
-            "bargain_hunters, gourmet, pet_owners, plant_based, fitness.\n\n"
+            "The following personas are available:\n"
+            + self._personas +
             "Rules:\n"
             "- Only suggest a change when the evidence from the orders clearly supports it.\n"
             "- Set a field to null if the current value should remain unchanged.\n"
@@ -252,6 +381,8 @@ class PromptBuilder:
             "online grocery service. Given a customer's profile, their latest order, "
             "and purchase history, predict which items they will most likely order next "
             "and in what quantities.\n\n"
+            "The folllowing personas are available:"
+            + self._personas +
             "Rules:\n"
             "- Only recommend items from the provided product catalogue.\n"
             "- Return as many items, as the customer usually orders, ranked by confidence (highest first).\n"
