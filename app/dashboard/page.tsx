@@ -24,7 +24,6 @@ import { products } from "@/lib/mock/products";
 import { cn, formatPrice, cartTotal, cartCO2 } from "@/lib/utils";
 import { Product } from "@/types";
 import {
-    bundles,
     mealSuggestions,
     popularProducts,
 } from "@/lib/mock/suggestions";
@@ -489,11 +488,14 @@ export default function DashboardPage() {
     const router = useRouter();
     const persona = useStore((s) => s.currentPersona);
     const cart = useStore((s) => s.cart);
+    const storeBundles = useStore((s) => s.bundles);
+    const fetchBundles = useStore((s) => s.fetchBundles);
 
-    const [bundleTab, setBundleTab] = useState<"reorder" | "topup">("reorder");
+    const [bundleTab, setBundleTab] = useState<"reorder" | "topup">("topup");
 
     useEffect(() => {
         if (!persona) router.push("/onboarding");
+        else fetchBundles();
     }, [persona, router]);
 
     if (!persona) return null;
@@ -512,15 +514,11 @@ export default function DashboardPage() {
         )
         .slice(0, 8);
 
-    const personaBundles = bundles[persona.id] ?? [];
     const personaPopular = popularProducts[persona.id] ?? [];
 
-    const reorderBundles = personaBundles.filter(
-        (b) => b.category === "reorder",
-    );
-    const topupBundles = personaBundles.filter((b) => b.category === "topup");
-    const activeBundles =
-        bundleTab === "reorder" ? reorderBundles : topupBundles;
+    const reorderBundles = storeBundles.filter((b) => b.category === "reorder");
+    const topupBundles = storeBundles.filter((b) => b.category === "topup");
+    const activeBundles = bundleTab === "reorder" ? reorderBundles : topupBundles;
 
     // Popular in region: random products
     const popular = products.filter((p) => !inCartIds.has(p.id)).slice(5, 13);
