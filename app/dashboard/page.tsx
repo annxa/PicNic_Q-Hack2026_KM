@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -16,8 +16,9 @@ import { BottomNav } from "@/components/shared/BottomNav";
 import { PicnicLogo } from "@/components/shared/PicnicLogo";
 import { DemoBanner } from "@/components/shared/DemoBanner";
 import { ProductCard } from "@/components/shared/ProductCard";
-import { products } from "@/lib/mock/products";
-import { cn, formatPrice, cartTotal, cartCO2 } from "@/lib/utils";
+import { getProducts } from "@/lib/api";
+import { Product } from "@/types";
+import { formatPrice, cartTotal, cartCO2 } from "@/lib/utils";
 
 function CO2ProgressCard() {
     const {
@@ -216,10 +217,15 @@ export default function DashboardPage() {
     const router = useRouter();
     const persona = useStore((s) => s.currentPersona);
     const cart = useStore((s) => s.cart);
+    const [allProducts, setAllProducts] = useState<Product[]>([]);
 
     useEffect(() => {
         if (!persona) router.push("/onboarding");
     }, [persona, router]);
+
+    useEffect(() => {
+        getProducts().then(setAllProducts);
+    }, []);
 
     if (!persona) return null;
 
@@ -229,16 +235,16 @@ export default function DashboardPage() {
 
     // Personalized recommendations: products not in cart
     const inCartIds = new Set(cart.map((c) => c.product.id));
-    const recommendations = products
+    const recommendations = allProducts
         .filter(
-            (p) =>
+            (p: Product) =>
                 !inCartIds.has(p.id) &&
                 persona.preferredCategories.includes(p.category),
         )
         .slice(0, 8);
 
-    // Popular in region: random products
-    const popular = products.filter((p) => !inCartIds.has(p.id)).slice(5, 13);
+    // Popular in region: products not in cart
+    const popular = allProducts.filter((p: Product) => !inCartIds.has(p.id)).slice(5, 13);
 
     return (
         <div className="min-h-screen bg-[#F5F4F0] pb-24">

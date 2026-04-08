@@ -1,9 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft, Sparkles } from "lucide-react";
-import { personas } from "@/lib/mock/personas";
+import { getPersonas, PersonaFull } from "@/lib/api";
 import { useStore } from "@/lib/store/useStore";
 import { Persona, Restriction } from "@/types";
 import { cn } from "@/lib/utils";
@@ -42,6 +42,9 @@ export default function OnboardingPage() {
     const router = useRouter();
     const { initPersona, setHousehold, setRestrictions } = useStore();
 
+    const [personas, setPersonas] = useState<PersonaFull[]>([]);
+    const [loadingPersonas, setLoadingPersonas] = useState(true);
+
     const [step, setStep] = useState(0);
     const [selectedPersona, setSelectedPersona] = useState<Persona | null>(
         null,
@@ -52,6 +55,12 @@ export default function OnboardingPage() {
     const [activeRestrictions, setActiveRestrictions] = useState<Restriction[]>(
         [],
     );
+
+    useEffect(() => {
+        getPersonas()
+            .then(setPersonas)
+            .finally(() => setLoadingPersonas(false));
+    }, []);
 
     const handlePersonaSelect = (persona: Persona) => {
         setSelectedPersona(persona);
@@ -140,6 +149,11 @@ export default function OnboardingPage() {
                             </p>
 
                             <div className="space-y-3">
+                                {loadingPersonas && (
+                                    <p className="text-sm text-[#9B9B9B] text-center py-6">
+                                        Lade Profile…
+                                    </p>
+                                )}
                                 {personas.map((persona) => (
                                     <button
                                         key={persona.id}

@@ -1,20 +1,25 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useStore } from "@/lib/store/useStore";
 import { BottomNav } from "@/components/shared/BottomNav";
 import { DemoBanner } from "@/components/shared/DemoBanner";
-import { personas } from "@/lib/mock/personas";
+import { getPersonas, PersonaFull } from "@/lib/api";
 import { cn, formatPrice } from "@/lib/utils";
 import { LogOut, ChevronRight, Settings, Star, ShoppingBag } from "lucide-react";
 
 export default function ProfilePage() {
   const router = useRouter();
   const { currentPersona, initPersona } = useStore();
+  const [personas, setPersonas] = useState<PersonaFull[]>([]);
 
   useEffect(() => {
     if (!currentPersona) router.push("/onboarding");
   }, [currentPersona, router]);
+
+  useEffect(() => {
+    getPersonas().then(setPersonas);
+  }, []);
 
   if (!currentPersona) return null;
 

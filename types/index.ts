@@ -87,6 +87,10 @@ export interface Persona {
   deliverySlot: string;
   preferredCategories: string[];
   color: string;
+  // Extended fields populated from the API
+  mealSuggestions?: MealSuggestion[];
+  bundles?: Bundle[];
+  popularProducts?: { product: Product; percentage: number }[];
 }
 
 export interface MealSuggestion {

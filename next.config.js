@@ -5,6 +5,9 @@ const nextConfig = {
       { protocol: "https", hostname: "picsum.photos" },
     ],
   },
+  experimental: {
+    serverComponentsExternalPackages: ["better-sqlite3"],
+  },
 };
 
 export default nextConfig;
