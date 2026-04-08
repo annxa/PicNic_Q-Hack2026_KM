@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useStore } from "@/lib/store/useStore";
 import { cn } from "@/lib/utils";
+import { CartLogo } from "@/components/shared/CartLogo";
 
 // Custom Picnic-style SVG icons matching the building blocks grid
 function DiscoverIcon({ active }: { active: boolean }) {
@@ -54,39 +55,6 @@ function DiscoverIcon({ active }: { active: boolean }) {
                 stroke={c}
                 strokeWidth="1.75"
                 fill={active ? "#FDECEA" : "none"}
-            />
-        </svg>
-    );
-}
-
-function CartIcon({ active }: { active: boolean }) {
-    const c = active ? "#E1141C" : "#9B9B9B";
-    return (
-        <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                d="M6.5 2.5L3.5 6.5V20a1.5 1.5 0 001.5 1.5h14A1.5 1.5 0 0020.5 20V6.5L17.5 2.5H6.5Z"
-                stroke={c}
-                strokeWidth="1.75"
-                strokeLinejoin="round"
-                fill={active ? "#FDECEA" : "none"}
-            />
-            <path
-                d="M3.5 6.5h17"
-                stroke={c}
-                strokeWidth="1.75"
-                strokeLinecap="round"
-            />
-            <path
-                d="M15.5 10a3.5 3.5 0 01-7 0"
-                stroke={c}
-                strokeWidth="1.75"
-                strokeLinecap="round"
             />
         </svg>
     );
@@ -160,8 +128,8 @@ function ProfileIcon({ active }: { active: boolean }) {
 
 const NAV_ITEMS = [
     { href: "/dashboard", Icon: DiscoverIcon, label: "Discover" },
-    { href: "/cart", Icon: CartIcon, label: "Cart" },
-    { href: "/pantry", Icon: PantryIcon, label: "Pantry" },
+    { href: "/cart", Icon: CartLogo, label: "Cart" },
+    /*{ href: "/pantry",    Icon: PantryIcon,   label: "Pantry" },*/
     { href: "/profile", Icon: ProfileIcon, label: "Profile" },
 ];
 

@@ -249,152 +249,6 @@ function LowStockItem({ item }: { item: import("@/types").PantryItem }) {
     );
 }
 
-// ─── Bundle Card ──────────────────────────────────────────────────────────────
-function BundleCard({ bundle }: { bundle: import("@/types").Bundle }) {
-    const addToCart = useStore((s) => s.addToCart);
-    const [added, setAdded] = useState(false);
-
-    const handleAdd = () => {
-        bundle.items.forEach(({ product, quantity }) => {
-            addToCart({
-                product,
-                quantity,
-                addedReason: `From bundle "${bundle.name}"`,
-            });
-        });
-        setAdded(true);
-        setTimeout(() => setAdded(false), 2000);
-    };
-
-    return (
-        <div className="flex-shrink-0 w-56 bg-gray-50 rounded-2xl p-3.5">
-            <p className="text-sm font-bold text-gray-900 mb-0.5">
-                {bundle.name}
-            </p>
-            <p className="text-xs text-gray-500 mb-2">{bundle.description}</p>
-            <div className="flex gap-1 mb-2.5 flex-wrap">
-                {bundle.items.slice(0, 4).map(({ product }) => (
-                    <span key={product.id} className="text-lg">
-                        {product.emoji}
-                    </span>
-                ))}
-                {bundle.items.length > 4 && (
-                    <span className="text-xs text-gray-400 self-center">
-                        +{bundle.items.length - 4}
-                    </span>
-                )}
-            </div>
-            <div className="flex items-center justify-between">
-                <div>
-                    <span className="text-sm font-black text-gray-900">
-                        {formatPrice(bundle.totalPrice)}
-                    </span>
-                    {bundle.savings && (
-                        <span className="ml-1.5 text-[10px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 rounded-full">
-                            -{formatPrice(bundle.savings)}
-                        </span>
-                    )}
-                </div>
-                <button
-                    onClick={handleAdd}
-                    className={cn(
-                        "px-3 py-1.5 rounded-xl text-xs font-bold transition-all",
-                        added
-                            ? "bg-emerald-500 text-white"
-                            : "bg-[#E1141C] text-white active:scale-95",
-                    )}
-                >
-                    {added ? "✓ Added" : "Add all items"}
-                </button>
-            </div>
-        </div>
-    );
-}
-
-// ─── Popular Section ──────────────────────────────────────────────────────────
-function PopularSection({
-    items,
-    matchTags,
-}: {
-    items: { product: Product; percentage: number }[];
-    matchTags: string;
-}) {
-    const addToCart = useStore((s) => s.addToCart);
-    const cart = useStore((s) => s.cart);
-
-    return (
-        <Section
-            icon={<Users size={16} className="text-blue-500" />}
-            title="Popular with similar households"
-            subtitle="Others like you buy this regularly"
-        >
-            <div className="flex gap-1.5 flex-wrap px-4 pt-3 pb-2">
-                {matchTags.split(" · ").map((tag) => (
-                    <span
-                        key={tag}
-                        className="text-[10px] bg-blue-50 text-blue-700 font-semibold px-2 py-1 rounded-full"
-                    >
-                        {tag}
-                    </span>
-                ))}
-            </div>
-            <div className="space-y-0">
-                {items.map(({ product, percentage }) => {
-                    const inCart = cart.find(
-                        (c) => c.product.id === product.id,
-                    );
-                    return (
-                        <div
-                            key={product.id}
-                            className="flex items-center gap-3 px-4 py-3 border-b border-gray-50 last:border-0"
-                        >
-                            <span className="text-2xl">{product.emoji}</span>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-semibold text-gray-900 truncate">
-                                    {product.name}
-                                </p>
-                                <p className="text-[10px] text-blue-600 font-medium mt-0.5">
-                                    {percentage}% of similar households buy this
-                                    weekly
-                                </p>
-                                <div className="h-1 bg-blue-100 rounded-full mt-1 overflow-hidden w-full">
-                                    <div
-                                        className="h-full bg-blue-500 rounded-full"
-                                        style={{ width: `${percentage}%` }}
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex-shrink-0 flex flex-col items-end gap-1">
-                                <span className="text-sm font-bold">
-                                    {formatPrice(product.price)}
-                                </span>
-                                <button
-                                    onClick={() =>
-                                        addToCart({
-                                            product,
-                                            quantity: 1,
-                                            addedReason: `${percentage}% buy this weekly`,
-                                        })
-                                    }
-                                    disabled={!!inCart}
-                                    className={cn(
-                                        "px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all",
-                                        inCart
-                                            ? "bg-emerald-100 text-emerald-700"
-                                            : "bg-gray-900 text-white active:scale-95",
-                                    )}
-                                >
-                                    {inCart ? "✓ Added" : "+ Add"}
-                                </button>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        </Section>
-    );
-}
-
 // ─── Meal Card ────────────────────────────────────────────────────────────────
 function MealCard({ meal }: { meal: import("@/types").MealSuggestion }) {
     const addToCart = useStore((s) => s.addToCart);
@@ -469,8 +323,6 @@ export default function CartPage() {
     const isRegenerating = useStore((s) => s.isRegenerating);
     const regenerateCart = useStore((s) => s.regenerateCart);
 
-    const [bundleTab, setBundleTab] = useState<"reorder" | "topup">("reorder");
-
     useEffect(() => {
         if (!persona) router.push("/onboarding");
     }, [persona, router]);
@@ -486,23 +338,7 @@ export default function CartPage() {
         (p) => !cart.find((c) => c.product.id === p.product.id),
     );
 
-    const personaBundles = bundles[persona.id] ?? [];
     const personaMeals = mealSuggestions[persona.id] ?? [];
-    const personaPopular = popularProducts[persona.id] ?? [];
-
-    const reorderBundles = personaBundles.filter(
-        (b) => b.category === "reorder",
-    );
-    const topupBundles = personaBundles.filter((b) => b.category === "topup");
-    const activeBundles =
-        bundleTab === "reorder" ? reorderBundles : topupBundles;
-
-    const matchTags =
-        {
-            schmidt: `${persona.household.size} people · Family · ~${persona.household.weeklyBudget} €/week`,
-            lena: `${persona.household.size} person · Flexitarian · ~${persona.household.weeklyBudget} €/week`,
-            wg: `${persona.household.size} people · Vegetarian · ~${persona.household.weeklyBudget} €/week`,
-        }[persona.id] ?? "";
 
     return (
         <div className="min-h-screen bg-[#F5F4F0] pb-24">
@@ -625,42 +461,6 @@ export default function CartPage() {
                         </p>
                     </div>
                 )}
-
-                {/* ─── Section 3c: Bundles ─── */}
-                <Section
-                    icon={<Package size={16} className="text-purple-500" />}
-                    title="Bundles"
-                    subtitle="Proven bundles & top-up packs"
-                >
-                    {/* Tabs */}
-                    <div className="flex gap-2 px-4 pt-3 pb-2">
-                        {(["reorder", "topup"] as const).map((tab) => (
-                            <button
-                                key={tab}
-                                onClick={() => setBundleTab(tab)}
-                                className={cn(
-                                    "flex-1 py-2 rounded-xl text-xs font-bold transition-all",
-                                    bundleTab === tab
-                                        ? "bg-[#E1141C] text-white"
-                                        : "bg-[#EFEEE9] text-[#6D6D6D]",
-                                )}
-                            >
-                                {tab === "reorder"
-                                    ? "🔄 Order again"
-                                    : "➕ Restock categories"}
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className="flex gap-3 overflow-x-auto scroll-x px-4 pb-4 pt-1">
-                        {activeBundles.map((bundle) => (
-                            <BundleCard key={bundle.id} bundle={bundle} />
-                        ))}
-                    </div>
-                </Section>
-
-                {/* ─── Section 3d: Popular with similar households ─── */}
-                <PopularSection items={personaPopular} matchTags={matchTags} />
 
                 {/* ─── Section 3e: Try something new ─── */}
                 <Section
