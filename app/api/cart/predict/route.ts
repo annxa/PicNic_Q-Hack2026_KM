@@ -69,7 +69,7 @@ function buildCartPredictionPrompt(
     }
     orderMap.get(row.order_id)!.items.push(row);
   }
-  const sortedOrders = [...orderMap.values()].sort(
+  const sortedOrders = Array.from(orderMap.values()).sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
@@ -121,8 +121,8 @@ function buildCartPredictionPrompt(
 
     const avgTotal =
       historyOrders.reduce((s, o) => s + o.total, 0) / historyOrders.length;
-    const topCats = [...catCounts.entries()].sort((a, b) => b[1] - a[1]).map(([c]) => c);
-    const frequentSkus = [...skuCounts.entries()]
+    const topCats = Array.from(catCounts.entries()).sort((a, b) => b[1] - a[1]).map(([c]) => c);
+    const frequentSkus = Array.from(skuCounts.entries())
       .filter(([, n]) => n >= 2)
       .map(([sku]) => sku);
 
@@ -154,6 +154,7 @@ function buildCartPredictionPrompt(
     "- Return as many items as the customer usually orders, ranked by confidence (highest first).\n" +
     "- Respect the customer's diet restrictions and intolerances.\n" +
     "- Consider reorder frequency, quantities, and household size.\n" +
+    "- The reasoning provided is for the customer's benefit and should be concise but informative.\n" +
     "- Respond ONLY with a valid JSON array. No prose, no markdown fences.";
 
   const user =
@@ -224,7 +225,7 @@ export async function GET(req: NextRequest) {
     const { system, user } = buildCartPredictionPrompt(customer, orderRows, articles);
 
     const message = await anthropic.messages.create({
-      model: "claude-opus-4-6",
+      model: "claude-sonnet-4-6",
       max_tokens: 1024,
       system,
       messages: [{ role: "user", content: user }],
@@ -248,7 +249,7 @@ export async function GET(req: NextRequest) {
           product: articleToProduct(article),
           quantity: item.quantity,
           addedReason: item.reason,
-        } satisfies CartItem;
+        } as CartItem;
       })
       .filter((item): item is CartItem => item !== null);
 
