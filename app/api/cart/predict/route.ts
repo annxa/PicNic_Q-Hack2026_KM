@@ -149,6 +149,7 @@ function buildCartPredictionPrompt(
     "You are a next-basket prediction engine for Picnic+, a personalised online grocery service. " +
     "Given a customer's profile, their latest order, and purchase history, predict which items they " +
     "will most likely order next and in what quantities.\n\n" +
+    "If a customer has no purchase history, base your prediction solely on their profile and persona. " +
     "Rules:\n" +
     "- Only recommend items from the provided product catalogue.\n" +
     "- Return as many items as the customer usually orders, ranked by confidence (highest first).\n" +
