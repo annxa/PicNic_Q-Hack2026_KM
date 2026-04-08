@@ -23,10 +23,7 @@ import { ProductCard } from "@/components/shared/ProductCard";
 import { products } from "@/lib/mock/products";
 import { cn, formatPrice, cartTotal, cartCO2 } from "@/lib/utils";
 import { Product } from "@/types";
-import {
-    mealSuggestions,
-    popularProducts,
-} from "@/lib/mock/suggestions";
+import { mealSuggestions, popularProducts } from "@/lib/mock/suggestions";
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
 function Section({
@@ -150,8 +147,8 @@ function CO2ProgressCard() {
     const [animated, setAnimated] = useState(false);
     const [showDetail, setShowDetail] = useState(false);
     // Pick a random comparison once per session mount
-    const [compIdx] = useState(
-        () => Math.floor(Math.random() * CO2_COMPARISONS.length)
+    const [compIdx] = useState(() =>
+        Math.floor(Math.random() * CO2_COMPARISONS.length),
     );
     const pct = Math.min(100, (co2SavedThisMonth / co2MonthlyGoal) * 100);
     const activeComp = CO2_COMPARISONS[compIdx];
@@ -518,7 +515,8 @@ export default function DashboardPage() {
 
     const reorderBundles = storeBundles.filter((b) => b.category === "reorder");
     const topupBundles = storeBundles.filter((b) => b.category === "topup");
-    const activeBundles = bundleTab === "reorder" ? reorderBundles : topupBundles;
+    const activeBundles =
+        bundleTab === "reorder" ? reorderBundles : topupBundles;
 
     // Popular in region: random products
     const popular = products.filter((p) => !inCartIds.has(p.id)).slice(5, 13);
@@ -632,7 +630,7 @@ export default function DashboardPage() {
                     </div>
                 </section>
 
-                {/* Popular in region */}
+                {/*}
                 <section>
                     <div className="flex items-baseline justify-between mb-1">
                         <h2 className="text-[18px] font-semibold text-gray-900 tracking-tight">
@@ -654,7 +652,7 @@ export default function DashboardPage() {
                             />
                         ))}
                     </div>
-                </section>
+                </section>*/}
 
                 {/* ─── Section 3c: Bundles ─── */}
                 <Section
