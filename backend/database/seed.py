@@ -430,9 +430,6 @@ class Seeder:
 
 
 if __name__ == "__main__":
-    try:
-        from database import reset_db
-    except ModuleNotFoundError:
-        from backend.database.database import reset_db
+    from backend.database.database import reset_db
     reset_db()
     Seeder().run()

@@ -372,7 +372,7 @@ function buildPantry(orders: OrderGroup[]): PantryItem[] {
   }
 
   const items: PantryItem[] = [];
-  for (const { line, orderDate } of seen.values()) {
+  for (const { line, orderDate } of Array.from(seen.values())) {
     const daysSince = Math.floor(
       (now.getTime() - orderDate.getTime()) / 86_400_000
     );
@@ -411,7 +411,7 @@ function buildMealSuggestions(
       }
     }
   }
-  const topProducts = [...seen.values()]
+  const topProducts = [...Array.from(seen.values())]
     .sort((a, b) => b.count - a.count)
     .map((v) => v.product);
 
@@ -462,7 +462,7 @@ function buildBundles(orders: OrderGroup[]): Bundle[] {
       else freq.set(id, { product: orderlineToProduct(line), count: 1 });
     }
   }
-  const topupProducts = [...freq.values()]
+  const topupProducts = [...Array.from(freq.values())]
     .sort((a, b) => b.count - a.count)
     .slice(0, 4)
     .map((v) => ({ product: v.product, quantity: 1 }));
@@ -495,7 +495,7 @@ function buildPopularProducts(
 ): { product: Product; percentage: number }[] {
   // Count how many distinct customers ordered each article
   const customerCount = new Map<string, Set<string>>();
-  for (const [customerId, custOrders] of allCustomerOrders) {
+  allCustomerOrders.forEach((custOrders, customerId) => {
     for (const order of custOrders) {
       for (const line of order.lines) {
         if (!customerCount.has(line.article_id)) {
@@ -504,7 +504,7 @@ function buildPopularProducts(
         customerCount.get(line.article_id)!.add(customerId);
       }
     }
-  }
+  });
   const totalCustomers = allCustomerOrders.size || 1;
 
   // Collect products from THIS customer's orders
@@ -515,7 +515,7 @@ function buildPopularProducts(
     }
   }
 
-  return [...myProducts.entries()]
+  return Array.from(myProducts.entries())
     .map(([id, product]) => ({
       product,
       percentage: Math.round(
@@ -582,9 +582,9 @@ export async function GET() {
 
     // 5. Build OrderGroup[] per customer
     const ordersByCustomer = new Map<string, OrderGroup[]>();
-    for (const [customerId, rows] of rowsByCustomer) {
+    rowsByCustomer.forEach((rows, customerId) => {
       ordersByCustomer.set(customerId, groupOrders(rows));
-    }
+    });
 
     // 6. Build full Persona objects
     const now = new Date();
