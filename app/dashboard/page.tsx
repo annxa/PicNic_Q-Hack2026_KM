@@ -423,8 +423,6 @@ export default function DashboardPage() {
     const router = useRouter();
     const persona = useStore((s) => s.currentPersona);
     const cart = useStore((s) => s.cart);
-    const storeBundles = useStore((s) => s.bundles);
-    const fetchBundles = useStore((s) => s.fetchBundles);
     const co2PerDelivery = useStore((s) => s.co2PerDelivery);
     const fetchCo2Distance = useStore((s) => s.fetchCo2Distance);
 
