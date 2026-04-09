@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import db from "@/lib/db";
-import { articleToProduct } from "@/app/api/products/route";
+import { articleToProduct } from "@/lib/articles";
 import type { SavedPackage } from "@/types";
 
 interface DbCustomer {
@@ -35,7 +35,7 @@ function buildPrompt(
     if (e) e.count += row.quantity;
     else skuCounts.set(row.sku, { name: row.article_name, count: row.quantity, category: row.article_category });
   }
-  const topItems = [...skuCounts.entries()]
+  const topItems = Array.from(skuCounts.entries())
     .sort((a, b) => b[1].count - a[1].count).slice(0, 10)
     .map(([sku, v]) => `  - ${v.name} (SKU: ${sku}, cat: ${v.category}, qty: ${v.count})`);
 
@@ -127,24 +127,24 @@ export async function GET(req: NextRequest) {
     const suggested: ClaudePackage[] = JSON.parse(stripped);
     const articleBySku = new Map(articles.map((a) => [a.sku, a]));
 
-    const packages: SavedPackage[] = suggested
-      .map((pkg, i) => {
-        const items = pkg.article_skus
-          .map((sku) => { const a = articleBySku.get(sku); return a ? { product: articleToProduct(a), quantity: 1 } : null; })
-          .filter((x): x is { product: ReturnType<typeof articleToProduct>; quantity: number } => x !== null);
-        if (items.length === 0) return null;
-        return {
-          id: `ai-${i}-${Date.now()}`,
-          name: pkg.name,
-          emoji: "✨",
-          description: `${pkg.description} — ${pkg.reason}`,
-          items,
-          totalPrice: parseFloat(items.reduce((s, i) => s + i.product.price, 0).toFixed(2)),
-          isPreset: false,
-          createdAt: new Date().toISOString().slice(0, 10),
-        } satisfies SavedPackage;
-      })
-      .filter((p): p is SavedPackage => p !== null);
+    const packages: SavedPackage[] = [];
+    suggested.forEach((pkg, i) => {
+      const items = pkg.article_skus.flatMap((sku) => {
+        const a = articleBySku.get(sku);
+        return a ? [{ product: articleToProduct(a), quantity: 1 as const }] : [];
+      });
+      if (items.length === 0) return;
+      packages.push({
+        id: `ai-${i}-${Date.now()}`,
+        name: pkg.name,
+        emoji: "✨",
+        description: `${pkg.description} — ${pkg.reason}`,
+        items,
+        totalPrice: parseFloat(items.reduce((s, item) => s + item.product.price, 0).toFixed(2)),
+        isPreset: false,
+        createdAt: new Date().toISOString().slice(0, 10),
+      });
+    });
 
     return NextResponse.json(packages);
   } catch (err) {

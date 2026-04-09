@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
-import { articleToProduct, CATEGORY_MAP } from "@/app/api/products/route";
+import { articleToProduct, CATEGORY_MAP } from "@/lib/articles";
 import type {
   Persona,
   Product,
@@ -247,7 +247,6 @@ interface DbOrderRow {
   customer_id: string;
   creation_date: string;
   total_price: number;
-  co2_saved: number; // stored at checkout; 0 for seeded/legacy orders
   sku: string;
   quantity: number;
   // article fields
@@ -322,7 +321,7 @@ function groupOrders(rows: DbOrderRow[]): OrderGroup[] {
         creationDate: row.creation_date,
         totalPrice: row.total_price,
         // Use stored delivery CO₂; fall back to delivery-distance estimate for legacy rows
-        co2Saved: row.co2_saved > 0 ? row.co2_saved : DELIVERY_CO2_FALLBACK,
+        co2Saved: DELIVERY_CO2_FALLBACK,
         lines: [],
       });
     }
@@ -545,7 +544,6 @@ export async function GET() {
                 o.customer_id,
                 o.creation_date,
                 o.total_price,
-                COALESCE(o.co2_saved, 0) AS co2_saved,
                 ol.sku,
                 ol.quantity,
                 a.id       AS article_id,

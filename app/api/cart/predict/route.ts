@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import db from "@/lib/db";
-import { articleToProduct } from "@/app/api/products/route";
+import { articleToProduct } from "@/lib/articles";
 import type { CartItem } from "@/types";
 
 // ── DB row types ──────────────────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
-import { articleToProduct } from "@/app/api/products/route";
+import { articleToProduct } from "@/lib/articles";
 import type { SavedPackage, Product } from "@/types";
 
 // ── DB row type ───────────────────────────────────────────────────────────────
