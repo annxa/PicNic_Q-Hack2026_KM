@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft, Sparkles, User, UserPlus } from "lucide-react";
 import { getPersonas, PersonaFull } from "@/lib/api";
 import { useStore } from "@/lib/store/useStore";
-import { Restriction } from "@/types";
+import { Restriction, Goal } from "@/types";
 import { cn } from "@/lib/utils";
 import { DemoBanner } from "@/components/shared/DemoBanner";
 import { PicnicLogo } from "@/components/shared/PicnicLogo";
@@ -86,6 +86,20 @@ const PERSONA_TYPES: PersonaType[] = [
     },
 ];
 
+// ── Shopping goals ────────────────────────────────────────────────────────────
+
+const GOAL_OPTIONS: { id: Goal; label: string; emoji: string }[] = [
+    { id: "eat_more_veggies",        label: "Eat More Veggies",       emoji: "🥗" },
+    { id: "healthier_snacks",        label: "Healthier Snacks",       emoji: "🍎" },
+    { id: "reduce_meat",             label: "Reduce Meat",            emoji: "🥩" },
+    { id: "cut_processed_foods",     label: "Cut Processed Foods",    emoji: "🚫" },
+    { id: "discover_new_foods",      label: "Discover New Foods",     emoji: "🌍" },
+    { id: "reduce_plastic_waste",    label: "Reduce Plastic Waste",   emoji: "♻️" },
+    { id: "stock_the_pantry",        label: "Stock the Pantry",       emoji: "📦" },
+    { id: "quick_dinners",           label: "Quick Dinners",          emoji: "⚡" },
+    { id: "lower_carbon_footprint",  label: "Lower Carbon Footprint", emoji: "🌱" },
+];
+
 // ── Dietary restrictions ───────────────────────────────────────────────────────
 
 const RESTRICTION_OPTIONS: { id: Restriction; label: string; emoji: string }[] = [
@@ -111,7 +125,7 @@ type Mode = "choose" | "login" | "register";
 
 export default function OnboardingPage() {
     const router = useRouter();
-    const { initPersona, setHousehold, setRestrictions } = useStore();
+    const { initPersona, setHousehold, setRestrictions, setGoals } = useStore();
 
     const [personas, setPersonas]               = useState<PersonaFull[]>([]);
     const [loadingPersonas, setLoadingPersonas] = useState(true);
@@ -130,6 +144,7 @@ export default function OnboardingPage() {
     const [householdSize,      setHouseholdSize]      = useState(2);
     const [hasChildren,        setHasChildren]        = useState(false);
     const [activeRestrictions, setActiveRestrictions] = useState<Restriction[]>([]);
+    const [activeGoals,        setActiveGoals]        = useState<Goal[]>([]);
 
     useEffect(() => {
         getPersonas()
@@ -148,6 +163,7 @@ export default function OnboardingPage() {
         initPersona(found);
         setHousehold(found.household);
         setRestrictions(found.defaultRestrictions);
+        setGoals(found.defaultGoals ?? []);
         router.push("/dashboard");
     };
 
@@ -168,6 +184,7 @@ export default function OnboardingPage() {
                 householdSize,
                 hasChildren,
                 intolerances: activeRestrictions,
+                goals: activeGoals,
             }),
         });
         const data = await res.json();
@@ -186,6 +203,7 @@ export default function OnboardingPage() {
         initPersona(customPersona);
         setHousehold({ ...base.household, size: householdSize, hasKids: hasChildren });
         setRestrictions(activeRestrictions);
+        setGoals(activeGoals);
         router.push("/dashboard");
     };
 
@@ -206,6 +224,13 @@ export default function OnboardingPage() {
     const toggleRestriction = (r: Restriction) =>
         setActiveRestrictions((prev) =>
             prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r]
+        );
+
+    const toggleGoal = (g: Goal) =>
+        setActiveGoals((prev) =>
+            prev.includes(g)
+                ? prev.filter((x) => x !== g)
+                : prev.length < 3 ? [...prev, g] : prev
         );
 
     const goBack = () => {
@@ -540,7 +565,7 @@ export default function OnboardingPage() {
                             </div>
 
                             {/* Dietary restrictions */}
-                            <div>
+                            <div className="mb-7">
                                 <label className="text-sm font-semibold text-gray-700 block mb-3">
                                     Dietary restrictions
                                 </label>
@@ -562,6 +587,45 @@ export default function OnboardingPage() {
                                     ))}
                                 </div>
                                 {activeRestrictions.length === 0 && (
+                                    <p className="text-xs text-gray-400 italic">None selected</p>
+                                )}
+                            </div>
+
+                            {/* Shopping goals */}
+                            <div>
+                                <div className="flex items-center justify-between mb-3">
+                                    <label className="text-sm font-semibold text-gray-700">
+                                        Shopping goals
+                                    </label>
+                                    <span className="text-xs text-gray-400">
+                                        {activeGoals.length}/3 selected
+                                    </span>
+                                </div>
+                                <div className="flex flex-wrap gap-2 mb-3">
+                                    {GOAL_OPTIONS.map((opt) => {
+                                        const isSelected = activeGoals.includes(opt.id);
+                                        const isDisabled = !isSelected && activeGoals.length >= 3;
+                                        return (
+                                            <button
+                                                key={opt.id}
+                                                onClick={() => toggleGoal(opt.id)}
+                                                disabled={isDisabled}
+                                                className={cn(
+                                                    "flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium border transition-all",
+                                                    isSelected
+                                                        ? "bg-[#E1171E] border-[#E1171E] text-white"
+                                                        : isDisabled
+                                                          ? "border-[#C9C6C3] bg-[#FAFAFA] opacity-40 cursor-not-allowed text-[#333333]"
+                                                          : "bg-white border-[#C9C6C3] text-[#333333]"
+                                                )}
+                                            >
+                                                <span>{opt.emoji}</span>
+                                                {opt.label}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                {activeGoals.length === 0 && (
                                     <p className="text-xs text-gray-400 italic">None selected</p>
                                 )}
                             </div>

@@ -1,4 +1,5 @@
-export function CartLogo({ size = 40 }: { size?: number }) {
+export function CartLogo({ active = false }: { active?: boolean; size?: number }) {
+    const c = active ? "#E1171E" : "#787570";
     return (
         <svg
             width="24"
@@ -9,9 +10,10 @@ export function CartLogo({ size = 40 }: { size?: number }) {
         >
             <path
                 d="M17.625 9L14.625 5.25M6.375 9L9.375 5.25M19.431 11.2251L18.039 17.0251C17.7962 18.0367 16.8915 18.75 15.8511 18.75H8.08154C7.07254 18.75 6.18692 18.0783 5.91487 17.1067L4.28325 11.2794C4.01543 10.323 4.73442 9.375 5.72769 9.375H17.9724C18.9424 9.375 19.6574 10.2818 19.431 11.2251Z"
-                stroke="#333333"
-                stroke-width="1.5"
-                stroke-linecap="round"
+                stroke={c}
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                fill={active ? "#FDECEA" : "none"}
             />
         </svg>
     );

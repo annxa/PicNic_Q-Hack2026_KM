@@ -8,11 +8,12 @@ interface RegisterBody {
   householdSize: number;
   hasChildren: boolean;
   intolerances: string[];
+  goals: string[];
 }
 
 export async function POST(req: Request) {
   try {
-    const { name, personaKey, householdSize, hasChildren, intolerances } =
+    const { name, personaKey, householdSize, hasChildren, intolerances, goals } =
       (await req.json()) as RegisterBody;
 
     // Reject duplicate names
@@ -40,8 +41,8 @@ export async function POST(req: Request) {
       .prepare(
         `INSERT INTO customers
            (id, name, email, house_hold_size, has_children, diet,
-            intolerances, persona_id, co2, has_pets, tech_savviness, country)
-         VALUES (?, ?, ?, ?, ?, 'omni', ?, ?, 0.00, 0, 'medium', 'Germany')`
+            intolerances, goals, persona_id, co2, has_pets, tech_savviness, country)
+         VALUES (?, ?, ?, ?, ?, 'omni', ?, ?, ?, 0.00, 0, 'medium', 'Germany')`
       )
       .run(
         id,
@@ -50,6 +51,7 @@ export async function POST(req: Request) {
         householdSize,
         hasChildren ? 1 : 0,
         Array.isArray(intolerances) ? intolerances.join(",") : "",
+        Array.isArray(goals) ? goals.join(",") : "",
         personaRow?.id ?? null
       );
 

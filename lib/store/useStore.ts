@@ -1,13 +1,14 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Persona, CartItem, PantryItem, Household, Restriction, SavedPackage } from "@/types";
+import { Persona, CartItem, PantryItem, Household, Restriction, Goal, SavedPackage } from "@/types";
 
 interface Store {
   // State
   currentPersona: Persona | null;
   household: Household | null;
   restrictions: Restriction[];
+  goals: Goal[];
   cart: CartItem[];
   pantry: PantryItem[];
   co2SavedThisWeek: number;
@@ -23,6 +24,7 @@ interface Store {
   setCurrentPersona: (persona: Persona) => void;
   setHousehold: (household: Household) => void;
   setRestrictions: (restrictions: Restriction[]) => void;
+  setGoals: (goals: Goal[]) => void;
   addToCart: (item: CartItem) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, delta: number) => void;
@@ -41,6 +43,7 @@ export const useStore = create<Store>()(
       currentPersona: null,
       household: null,
       restrictions: [],
+      goals: [],
       cart: [],
       pantry: [],
       co2SavedThisWeek: 0,
@@ -56,6 +59,7 @@ export const useStore = create<Store>()(
           currentPersona: persona,
           household: persona.household,
           restrictions: persona.defaultRestrictions,
+          goals: persona.defaultGoals ?? [],
           cart: [...persona.defaultCart],
           pantry: [...persona.pantry],
           co2SavedThisWeek: persona.co2SavedThisWeek,
@@ -68,6 +72,7 @@ export const useStore = create<Store>()(
       setCurrentPersona: (persona) => set({ currentPersona: persona }),
       setHousehold: (household) => set({ household }),
       setRestrictions: (restrictions) => set({ restrictions }),
+      setGoals: (goals) => set({ goals }),
 
       addToCart: (item) => {
         const current = get().cart;
@@ -203,6 +208,7 @@ export const useStore = create<Store>()(
         currentPersona: state.currentPersona,
         household: state.household,
         restrictions: state.restrictions,
+        goals: state.goals,
         cart: state.cart,
         pantry: state.pantry,
         co2SavedThisWeek: state.co2SavedThisWeek,

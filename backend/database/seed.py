@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 try:
     from backend.database.database import SessionLocal, Customer, Article, Stock, FC, Hub, Ingredient, Package, Persona, Level, Order, Orderline
 except ModuleNotFoundError:
-    from database import SessionLocal, Customer, Article, Stock, FC, Hub, Ingredient, Package, Persona, Level, Order, Orderline
+    from database.database import SessionLocal, Customer, Article, Stock, FC, Hub, Ingredient, Package, Persona, Level, Order, Orderline
 
 
 class Seeder:

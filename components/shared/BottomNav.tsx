@@ -119,6 +119,17 @@ function StoreIcon({ active }: { active: boolean }) {
     );
 }
 
+function RecipeIcon() {
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="3" width="16" height="18" rx="2" stroke="#787570" strokeWidth="1.75" />
+            <path d="M8 8h8"  stroke="#787570" strokeWidth="1.75" strokeLinecap="round" />
+            <path d="M8 12h8" stroke="#787570" strokeWidth="1.75" strokeLinecap="round" />
+            <path d="M8 16h5" stroke="#787570" strokeWidth="1.75" strokeLinecap="round" />
+        </svg>
+    );
+}
+
 function ProfileIcon({ active }: { active: boolean }) {
     const c = active ? "#E1171E" : "#787570";
     return (
@@ -154,6 +165,9 @@ const NAV_ITEMS = [
     { href: "/profile",   Icon: ProfileIcon,  label: "Profile"  },
 ];
 
+const NAV_ITEMS_LEFT  = NAV_ITEMS.slice(0, 2);
+const NAV_ITEMS_RIGHT = NAV_ITEMS.slice(2);
+
 export function BottomNav() {
     const pathname = usePathname();
     const cart = useStore((s) => s.cart);
@@ -165,7 +179,29 @@ export function BottomNav() {
             style={{ boxShadow: "0 -1px 0 rgba(0,0,0,0.07)" }}
         >
             <div className="flex items-center justify-around px-2 pt-2 pb-1">
-                {NAV_ITEMS.map(({ href, Icon, label }) => {
+                {NAV_ITEMS_LEFT.map(({ href, Icon, label }) => {
+                    const active = pathname === href;
+                    return (
+                        <Link
+                            key={href}
+                            href={href}
+                            className="flex flex-col items-center gap-0.5 px-4 py-0.5"
+                        >
+                            <Icon active={active} />
+                            <span className={cn("text-[10px] font-medium", active ? "text-[#E1171E]" : "text-[#787570]")}>
+                                {label}
+                            </span>
+                        </Link>
+                    );
+                })}
+
+                {/* Recipe tab — centre, non-functional */}
+                <button className="flex flex-col items-center gap-0.5 px-4 py-0.5">
+                    <RecipeIcon />
+                    <span className="text-[10px] font-medium text-[#787570]">Recipes</span>
+                </button>
+
+                {NAV_ITEMS_RIGHT.map(({ href, Icon, label }) => {
                     const active = pathname === href;
                     const isCart = href === "/cart";
                     return (
@@ -182,14 +218,7 @@ export function BottomNav() {
                                     </span>
                                 )}
                             </div>
-                            <span
-                                className={cn(
-                                    "text-[10px] font-medium",
-                                    active
-                                        ? "text-[#E1171E]"
-                                        : "text-[#787570]",
-                                )}
-                            >
+                            <span className={cn("text-[10px] font-medium", active ? "text-[#E1171E]" : "text-[#787570]")}>
                                 {label}
                             </span>
                         </Link>

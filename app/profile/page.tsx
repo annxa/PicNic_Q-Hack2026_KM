@@ -10,7 +10,7 @@ import { LogOut, ChevronRight, Settings, Star, ShoppingBag } from "lucide-react"
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { currentPersona, initPersona, setCurrentPersona } = useStore();
+  const { currentPersona, initPersona, setCurrentPersona, goals } = useStore();
   const [personas, setPersonas] = useState<PersonaFull[]>([]);
 
   useEffect(() => {
@@ -65,6 +65,38 @@ export default function ProfilePage() {
             <p className="text-[10px] text-gray-500 font-medium">CO₂ gespart</p>
           </div>
         </div>
+
+        {/* Shopping goals */}
+        {goals.length > 0 && (
+          <div className="bg-white rounded-3xl p-4 shadow-card">
+            <p className="text-sm font-bold text-gray-900 mb-3">My Goals</p>
+            <div className="flex flex-wrap gap-2">
+              {goals.map((g) => {
+                const GOAL_LABELS: Record<string, { label: string; emoji: string }> = {
+                  eat_more_veggies:       { label: "Eat More Veggies",       emoji: "🥗" },
+                  healthier_snacks:       { label: "Healthier Snacks",       emoji: "🍎" },
+                  reduce_meat:            { label: "Reduce Meat",            emoji: "🥩" },
+                  cut_processed_foods:    { label: "Cut Processed Foods",    emoji: "🚫" },
+                  discover_new_foods:     { label: "Discover New Foods",     emoji: "🌍" },
+                  reduce_plastic_waste:   { label: "Reduce Plastic Waste",   emoji: "♻️" },
+                  stock_the_pantry:       { label: "Stock the Pantry",       emoji: "📦" },
+                  quick_dinners:          { label: "Quick Dinners",          emoji: "⚡" },
+                  lower_carbon_footprint: { label: "Lower Carbon Footprint", emoji: "🌱" },
+                };
+                const meta = GOAL_LABELS[g];
+                return (
+                  <span
+                    key={g}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#FDECEA] text-[#E1171E] border border-[#E1171E]/20"
+                  >
+                    <span>{meta?.emoji}</span>
+                    {meta?.label ?? g}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Order history preview */}
         <div className="bg-white rounded-3xl overflow-hidden shadow-card">

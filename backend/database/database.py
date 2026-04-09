@@ -94,6 +94,7 @@ class Customer(Base):
     tech_savviness  = Column(String, default="medium")      # "low" | "medium" | "high"
     has_pets        = Column(Boolean, default=False)
     intolerances    = Column(String)                        # comma-separated, e.g. "gluten,lactose"
+    goals           = Column(String)                        # comma-separated, e.g. "eat_more_veggies,quick_dinners"
     co2             = Column(Numeric(precision=10, scale=2), default=0.00)  # total CO2 footprint in kg
     persona_id      = Column(String, ForeignKey("personas.id"), nullable=True)
 

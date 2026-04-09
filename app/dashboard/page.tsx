@@ -57,7 +57,7 @@ function Section({
                             {title}
                         </span>
                         {badge !== undefined && badge > 0 && (
-                            <span className="bg-[#E1171E] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                            <span className="bg-[#308807] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                                 {badge}
                             </span>
                         )}
@@ -348,7 +348,7 @@ function PopularSection({
 
     return (
         <Section
-            icon={<Users size={16} className="text-blue-500" />}
+            icon={<Users size={16} className="text-[#308807]" />}
             title="Popular with similar households"
             subtitle="Others like you buy this regularly"
         >
@@ -356,7 +356,7 @@ function PopularSection({
                 {matchTags.split(" · ").map((tag) => (
                     <span
                         key={tag}
-                        className="text-[10px] bg-blue-50 text-blue-700 font-semibold px-2 py-1 rounded-full"
+                        className="text-[10px] bg-[#F8F5F2] text-[#333333] font-semibold px-2 py-1 rounded-full"
                     >
                         {tag}
                     </span>
@@ -377,13 +377,13 @@ function PopularSection({
                                 <p className="text-sm font-semibold text-gray-900 truncate">
                                     {product.name}
                                 </p>
-                                <p className="text-[10px] text-blue-600 font-medium mt-0.5">
+                                <p className="text-[10px] text-[#308807] font-medium mt-0.5">
                                     {percentage}% of similar households buy this
                                     weekly
                                 </p>
-                                <div className="h-1 bg-blue-100 rounded-full mt-1 overflow-hidden w-full">
+                                <div className="h-1 bg-[#E7ECD7] rounded-full mt-1 overflow-hidden w-full">
                                     <div
-                                        className="h-full bg-blue-500 rounded-full"
+                                        className="h-full bg-[#308807] rounded-full"
                                         style={{ width: `${percentage}%` }}
                                     />
                                 </div>
@@ -404,8 +404,8 @@ function PopularSection({
                                     className={cn(
                                         "px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all",
                                         inCart
-                                            ? "bg-emerald-100 text-emerald-700"
-                                            : "bg-gray-900 text-white active:scale-95",
+                                            ? "bg-[#E7ECD7] text-[#308807]"
+                                            : "bg-[#333333] text-white active:scale-95",
                                     )}
                                 >
                                     {inCart ? "✓ Added" : "+ Add"}
@@ -490,16 +490,16 @@ export default function DashboardPage() {
                     </div>
                     <button className="w-9 h-9 bg-[#F8F5F2] rounded-full flex items-center justify-center relative">
                         <Bell size={18} className="text-[#5B534E]" />
-                        <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-[#E1171E] rounded-full" />
+                        <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-[#308807] rounded-full" />
                     </button>
                 </div>
 
                 {/* Delivery slot */}
-                <div className="flex items-center gap-2 bg-[#FDECEA] rounded-2xl px-3 py-2.5">
-                    <Zap size={14} className="text-[#E1171E]" />
+                <div className="flex items-center gap-2 bg-[#E7ECD7] rounded-2xl px-3 py-2.5">
+                    <Zap size={14} className="text-[#308807]" />
                     <p className="text-[12px] font-medium text-gray-700">
                         Next delivery:{" "}
-                        <span className="text-[#E1171E] font-semibold">
+                        <span className="text-[#308807] font-semibold">
                             {persona.deliverySlot}
                         </span>
                     </p>
@@ -606,7 +606,7 @@ export default function DashboardPage() {
                 {/* Quick stats */}
                 <div className="grid grid-cols-3 gap-3">
                     <div className="bg-white rounded-2xl p-3 text-center shadow-card">
-                        <p className="text-xl font-bold text-[#E1171E]">
+                        <p className="text-xl font-bold text-[#333333]">
                             {persona.orderHistory.length}
                         </p>
                         <p className="text-[10px] text-[#787570] font-medium mt-0.5">

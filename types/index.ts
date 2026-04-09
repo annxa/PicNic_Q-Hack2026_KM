@@ -5,6 +5,17 @@ export type DietStyle =
   | "flexitarisch"
   | "pescetarisch";
 
+export type Goal =
+  | "eat_more_veggies"
+  | "healthier_snacks"
+  | "reduce_meat"
+  | "cut_processed_foods"
+  | "discover_new_foods"
+  | "reduce_plastic_waste"
+  | "stock_the_pantry"
+  | "quick_dinners"
+  | "lower_carbon_footprint";
+
 export type Restriction =
   | "lactose"
   | "gluten"
@@ -77,6 +88,7 @@ export interface Persona {
   description: string;
   household: Household;
   defaultRestrictions: Restriction[];
+  defaultGoals: Goal[];
   pantry: PantryItem[];
   orderHistory: OrderHistoryEntry[];
   defaultCart: CartItem[];

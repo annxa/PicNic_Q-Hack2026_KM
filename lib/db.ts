@@ -32,4 +32,10 @@ try {
   // Column already exists — ignore
 }
 
+try {
+  dbWrite.prepare("ALTER TABLE customers ADD COLUMN goals TEXT DEFAULT ''").run();
+} catch {
+  // Column already exists — ignore
+}
+
 export default db;

@@ -9,6 +9,7 @@ import type {
   OrderHistoryEntry,
   Household,
   Restriction,
+  Goal,
   CO2Score,
   MealSuggestion,
   Bundle,
@@ -238,6 +239,7 @@ interface DbCustomer {
   location: string;
   has_pets: number;
   intolerances: string | null;
+  goals: string | null;
   persona_name: string | null;
   co2: number | null; // accumulated OSRM-based delivery CO₂ savings
 }
@@ -282,6 +284,14 @@ function parseIntolerances(raw: string | null): Restriction[] {
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean) as Restriction[];
+}
+
+function parseGoals(raw: string | null): Goal[] {
+  if (!raw) return [];
+  return raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean) as import("@/types").Goal[];
 }
 
 function orderlineToProduct(row: DbOrderRow): Product {
@@ -530,7 +540,7 @@ export async function GET() {
       .prepare(
         `SELECT c.id, c.name, c.email, c.house_hold_size, c.has_children,
                 c.diet, c.age_range, c.location, c.has_pets, c.intolerances,
-                c.co2,
+                c.goals, c.co2,
                 p.name as persona_name
          FROM customers c
          LEFT JOIN personas p ON c.persona_id = p.id`
@@ -625,6 +635,7 @@ export async function GET() {
       const weeklyBudget = Math.round(avgOrderTotal / 5) * 5;
 
       const defaultRestrictions = parseIntolerances(c.intolerances);
+      const defaultGoals = parseGoals(c.goals);
       const dietStyle = (DIET_MAP[c.diet] ?? "omnivor") as Household["dietStyle"];
 
       const household: Household = {
@@ -656,6 +667,7 @@ export async function GET() {
         description: meta.description,
         household,
         defaultRestrictions,
+        defaultGoals,
         pantry: buildPantry(orders),
         orderHistory,
         defaultCart: buildDefaultCart(orders[0]),

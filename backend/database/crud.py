@@ -1,3 +1,4 @@
+from __future__ import annotations
 from sqlalchemy.orm import Session
 try:
     from database.database import SessionLocal, Customer, Order, Article
@@ -32,6 +33,7 @@ class CRUDRepository:
         tech_savviness: str = "medium",
         has_pets: bool = False,
         intolerances: str = "",
+        goals: str = "",
         co2: float = 0.00,
         persona_id: str | None = None,
     ) -> Customer:
@@ -50,6 +52,7 @@ class CRUDRepository:
             tech_savviness=tech_savviness,
             has_pets=has_pets,
             intolerances=intolerances,
+            goals=goals,
             co2=co2,
             persona_id=persona_id,
         )

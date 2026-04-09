@@ -62,6 +62,7 @@ def add_customer():
                 tech_savviness=data.get("tech_savviness", "medium"),
                 has_pets=data.get("has_pets", False),
                 intolerances=data.get("intolerances", ""),
+                goals=data.get("goals", ""),
                 co2=data.get("co2", 0.00),
                 persona_id=data.get("persona_id"),
             )
