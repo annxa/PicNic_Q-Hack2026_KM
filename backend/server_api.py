@@ -127,8 +127,9 @@ def recommend_by_persona():
         _MAX_DISTANCE = (5 * 5 ** 2) ** 0.5  # sqrt(125) ≈ 11.18, all 5 dims at max diff
         top3_personas = ranked[:3]
 
-        # 4. for each of the 3 personas: find one customer and collect top product
+        # 4. for each of the 3 personas: find one customer and collect top product (no duplicates)
         result = []
+        seen_products: set[str] = set()
         for persona in top3_personas:
             similarity_pct = round((1 - _euclidean(input_vec, _persona_vector(persona)) / _MAX_DISTANCE) * 100, 1)
 
@@ -153,10 +154,17 @@ def recommend_by_persona():
                             product_counts[sku] = {"name": line.article.name, "total": 0}
                         product_counts[sku]["total"] += line.quantity
 
-            top_product = sorted(product_counts.values(), key=lambda x: x["total"], reverse=True)
+            # pick the highest-ranked product not already returned by a previous persona
+            top_product = next(
+                (p for p in sorted(product_counts.values(), key=lambda x: x["total"], reverse=True)
+                 if p["name"] not in seen_products),
+                None,
+            )
+            if top_product:
+                seen_products.add(top_product["name"])
             result.append({
                 "similarity": similarity_pct,
-                "top_product": top_product[0]["name"] if top_product else None,
+                "top_product": top_product["name"] if top_product else None,
             })
 
         return jsonify(result), 200
