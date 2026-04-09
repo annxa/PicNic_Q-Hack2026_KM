@@ -157,8 +157,8 @@ export default function OnboardingPage() {
         const base = personas.find((p) => p.avatar === primary.avatar);
         if (!base) return;
 
-        // Save to database
-        await fetch("/api/register", {
+        // Save to database and get the new customer's UUID
+        const res = await fetch("/api/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -169,9 +169,11 @@ export default function OnboardingPage() {
                 intolerances: activeRestrictions,
             }),
         });
+        const { customerId } = await res.json();
 
         const customPersona: PersonaFull = {
             ...base,
+            id: customerId,
             name: registerName.trim() || base.name,
         };
         initPersona(customPersona);
