@@ -67,9 +67,19 @@ export async function POST(req: Request) {
       .prepare("SELECT co2 FROM customers WHERE id = ?")
       .get(customerId) as { co2: number } | undefined;
 
+    // Build the order entry so the client can update its state immediately
+    const newOrder = {
+      id: orderId,
+      date: new Date().toISOString().slice(0, 10),
+      items: (cart ?? []).map((i) => ({ productId: i.productId, quantity: i.quantity })),
+      total: parseFloat(totalPrice.toFixed(2)),
+      co2Saved: co2SavedKg,
+    };
+
     return NextResponse.json({
       co2SavedKg,
       newCo2Total: parseFloat((row?.co2 ?? co2SavedKg).toFixed(3)),
+      newOrder,
     });
   } catch (err) {
     console.error("[/api/checkout]", err);
