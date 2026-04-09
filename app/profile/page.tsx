@@ -10,7 +10,7 @@ import { LogOut, ChevronRight, Settings, Star, ShoppingBag } from "lucide-react"
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { currentPersona, initPersona } = useStore();
+  const { currentPersona, initPersona, setCurrentPersona } = useStore();
   const [personas, setPersonas] = useState<PersonaFull[]>([]);
 
   useEffect(() => {
@@ -18,7 +18,13 @@ export default function ProfilePage() {
   }, [currentPersona, router]);
 
   useEffect(() => {
-    getPersonas().then(setPersonas);
+    getPersonas().then((fresh) => {
+      setPersonas(fresh);
+      // Refresh current persona's order history and CO₂ stats from the DB
+      const updated = fresh.find((p) => p.id === currentPersona?.id);
+      if (updated) setCurrentPersona(updated);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!currentPersona) return null;

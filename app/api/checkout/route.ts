@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbWrite } from "@/lib/db";
+import { randomUUID } from "crypto";
 
 const OSRM_URL =
   "http://router.project-osrm.org/route/v1/car/8.456665,49.487695;8.481575,49.479022?overview=false";
@@ -12,20 +13,54 @@ async function fetchCo2Saving(): Promise<number> {
   return parseFloat((((distanceMeters / 1000) * 2 * 150) / 1000).toFixed(3));
 }
 
+interface CartItem {
+  productId: string; // = article.id
+  quantity: number;
+}
+
 export async function POST(req: Request) {
   try {
-    const { customerId } = (await req.json()) as { customerId: string };
+    const { customerId, cart } = (await req.json()) as {
+      customerId: string;
+      cart: CartItem[];
+    };
 
-    const co2SavedKg = await fetchCo2Saving().catch(() => {
-      // Fallback: ~3.5 km road distance
-      return parseFloat(((3.5 * 2 * 150) / 1000).toFixed(3));
-    });
+    const co2SavedKg = await fetchCo2Saving().catch(() =>
+      parseFloat(((3.5 * 2 * 150) / 1000).toFixed(3))
+    );
 
-    // Accumulate CO₂ savings in the customer record
+    // ── 1. Calculate total price from DB article prices ──────────────────────
+    const totalPrice = (cart ?? []).reduce((sum, item) => {
+      const article = dbWrite
+        .prepare("SELECT price FROM articles WHERE id = ?")
+        .get(item.productId) as { price: number } | undefined;
+      return sum + (article?.price ?? 0) * item.quantity;
+    }, 0);
+
+    // ── 2. Insert order ───────────────────────────────────────────────────────
+    const orderId = randomUUID();
     dbWrite
       .prepare(
-        "UPDATE customers SET co2 = COALESCE(co2, 0) + ? WHERE id = ?"
+        `INSERT INTO orders (id, customer_id, creation_date, status, total_price, co2_saved)
+         VALUES (?, ?, datetime('now'), 'delivered', ?, ?)`
       )
+      .run(orderId, customerId, parseFloat(totalPrice.toFixed(2)), co2SavedKg);
+
+    // ── 3. Insert orderlines (look up SKU from article id) ────────────────────
+    const insertLine = dbWrite.prepare(
+      "INSERT INTO orderlines (id, order_id, sku, quantity) VALUES (?, ?, ?, ?)"
+    );
+    for (const item of cart ?? []) {
+      const article = dbWrite
+        .prepare("SELECT sku FROM articles WHERE id = ?")
+        .get(item.productId) as { sku: string } | undefined;
+      if (!article) continue;
+      insertLine.run(randomUUID(), orderId, article.sku, item.quantity);
+    }
+
+    // ── 4. Update customer CO₂ total ──────────────────────────────────────────
+    dbWrite
+      .prepare("UPDATE customers SET co2 = COALESCE(co2, 0) + ? WHERE id = ?")
       .run(co2SavedKg, customerId);
 
     const row = dbWrite

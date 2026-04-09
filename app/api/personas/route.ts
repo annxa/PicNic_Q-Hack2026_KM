@@ -225,8 +225,6 @@ const SKU_UNIT: Record<string, string> = {
   "DAI-YOG-001": "g",
 };
 
-const CO2_SAVING_FACTOR = 0.3;
-
 // ── DB row types ──────────────────────────────────────────────────────────────
 
 interface DbCustomer {
@@ -249,6 +247,7 @@ interface DbOrderRow {
   customer_id: string;
   creation_date: string;
   total_price: number;
+  co2_saved: number; // stored at checkout; 0 for seeded/legacy orders
   sku: string;
   quantity: number;
   // article fields
@@ -303,10 +302,14 @@ function orderlineToProduct(row: DbOrderRow): Product {
 
 // ── Derivation helpers ────────────────────────────────────────────────────────
 
+// Delivery-based CO₂ fallback for legacy seeded orders (same as OSRM fallback)
+const DELIVERY_CO2_FALLBACK = parseFloat(((3.5 * 2 * 150) / 1000).toFixed(3)); // 1.05 kg
+
 type OrderGroup = {
   orderId: string;
   creationDate: string;
   totalPrice: number;
+  co2Saved: number; // delivery-based; fallback for legacy orders
   lines: DbOrderRow[];
 };
 
@@ -318,6 +321,8 @@ function groupOrders(rows: DbOrderRow[]): OrderGroup[] {
         orderId: row.order_id,
         creationDate: row.creation_date,
         totalPrice: row.total_price,
+        // Use stored delivery CO₂; fall back to delivery-distance estimate for legacy rows
+        co2Saved: row.co2_saved > 0 ? row.co2_saved : DELIVERY_CO2_FALLBACK,
         lines: [],
       });
     }
@@ -331,23 +336,13 @@ function groupOrders(rows: DbOrderRow[]): OrderGroup[] {
 }
 
 function buildOrderHistory(orders: OrderGroup[]): OrderHistoryEntry[] {
-  return orders.map((o) => {
-    const co2 =
-      o.lines.reduce(
-        (s, l) => s + (l.carbon_footprint ?? 0) * l.quantity,
-        0
-      ) * CO2_SAVING_FACTOR;
-    return {
-      id: o.orderId,
-      date: o.creationDate.split("T")[0].replace(" ", "-").slice(0, 10),
-      items: o.lines.map((l) => ({
-        productId: l.article_id,
-        quantity: l.quantity,
-      })),
-      total: o.totalPrice,
-      co2Saved: parseFloat(co2.toFixed(2)),
-    };
-  });
+  return orders.map((o) => ({
+    id: o.orderId,
+    date: o.creationDate.split("T")[0].replace(" ", "-").slice(0, 10),
+    items: o.lines.map((l) => ({ productId: l.article_id, quantity: l.quantity })),
+    total: o.totalPrice,
+    co2Saved: parseFloat(o.co2Saved.toFixed(2)),
+  }));
 }
 
 function buildDefaultCart(lastOrder: OrderGroup | undefined): CartItem[] {
@@ -546,10 +541,11 @@ export async function GET() {
     // 2. All order rows (orders + orderlines + articles) in one query
     const allOrderRows = db
       .prepare(
-        `SELECT o.id       AS order_id,
+        `SELECT o.id         AS order_id,
                 o.customer_id,
                 o.creation_date,
                 o.total_price,
+                COALESCE(o.co2_saved, 0) AS co2_saved,
                 ol.sku,
                 ol.quantity,
                 a.id       AS article_id,

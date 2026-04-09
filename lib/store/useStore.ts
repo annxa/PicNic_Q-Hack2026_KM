@@ -20,6 +20,7 @@ interface Store {
 
   // Actions
   initPersona: (persona: Persona) => void;
+  setCurrentPersona: (persona: Persona) => void;
   setHousehold: (household: Household) => void;
   setRestrictions: (restrictions: Restriction[]) => void;
   addToCart: (item: CartItem) => void;
@@ -64,6 +65,7 @@ export const useStore = create<Store>()(
         });
       },
 
+      setCurrentPersona: (persona) => set({ currentPersona: persona }),
       setHousehold: (household) => set({ household }),
       setRestrictions: (restrictions) => set({ restrictions }),
 
@@ -149,10 +151,15 @@ export const useStore = create<Store>()(
         const persona = get().currentPersona;
         if (!persona) return 0;
 
+        const cartItems = get().cart.map((item) => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+        }));
+
         const res = await fetch("/api/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ customerId: persona.id }),
+          body: JSON.stringify({ customerId: persona.id, cart: cartItems }),
         });
 
         if (!res.ok) throw new Error("Checkout failed");
