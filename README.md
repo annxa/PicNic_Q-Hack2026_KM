@@ -17,6 +17,18 @@ The Next.js app will be available at `http://localhost:3000`.
 
 > Make sure `.env.local` contains your `ANTHROPIC_API_KEY` before starting.
 
+**Dependencies**
+
+Frontend (Node.js):
+```bash
+npm install
+```
+
+Backend (Python):
+```bash
+pip install flask sqlalchemy requests
+```
+
 ---
 
 ## Build the World's Greenest Supermarket
