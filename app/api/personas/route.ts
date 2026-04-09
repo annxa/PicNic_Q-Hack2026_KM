@@ -350,7 +350,7 @@ function buildDefaultCart(lastOrder: OrderGroup | undefined): CartItem[] {
   return lastOrder.lines.map((l) => ({
     product: orderlineToProduct(l),
     quantity: l.quantity,
-    addedReason: "Letzte Woche auch bestellt",
+    addedReason: "Ordered last week as well",
   }));
 }
 
@@ -427,7 +427,7 @@ function buildMealSuggestions(
       id: `meal-${pkg.id}`,
       name: pkg.name,
       emoji: MEAL_EMOJIS[i % MEAL_EMOJIS.length],
-      reason: pkg.description ?? "Passend zu deinen Vorlieben",
+      reason: pkg.description ?? "Close to your preferences",
       ingredients,
       totalPrice: parseFloat(totalPrice.toFixed(2)),
       co2Score: avgScore as CO2Score,
@@ -467,8 +467,8 @@ function buildBundles(orders: OrderGroup[]): Bundle[] {
   return [
     {
       id: "bundle-reorder",
-      name: "Wieder bestellen",
-      description: "Deine letzte Lieferung – einfach wiederholen",
+      name: "Order again",
+      description: "Your last order - order again",
       items: reorderItems,
       totalPrice: parseFloat(reorderTotal.toFixed(2)),
       savings: parseFloat((reorderTotal * 0.05).toFixed(2)),
@@ -476,8 +476,8 @@ function buildBundles(orders: OrderGroup[]): Bundle[] {
     },
     {
       id: "bundle-topup",
-      name: "Vorrat auffüllen",
-      description: "Deine meistgekauften Produkte auf einen Klick",
+      name: "Top up",
+      description: "Your most frequently ordered products at a click",
       items: topupProducts,
       totalPrice: parseFloat(topupTotal.toFixed(2)),
       category: "topup",
