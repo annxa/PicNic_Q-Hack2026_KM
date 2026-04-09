@@ -1,5 +1,24 @@
 # <p align="center"> Picnic Challenge @ Q-Hack 2026 </p>
 
+## Getting Started
+
+**1. Start the backend server**
+```bash
+cd backend
+python server_api.py
+```
+The Flask API will be available at `http://localhost:5001`.
+
+**2. Start the frontend**
+```bash
+npm run dev
+```
+The Next.js app will be available at `http://localhost:3000`.
+
+> Make sure `.env.local` contains your `ANTHROPIC_API_KEY` before starting.
+
+---
+
 ## Build the World's Greenest Supermarket
 
 ### 📄 Problem Statement
