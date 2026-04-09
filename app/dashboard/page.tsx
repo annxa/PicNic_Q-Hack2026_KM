@@ -22,7 +22,7 @@ import { ProductCard } from "@/components/shared/ProductCard";
 import { products } from "@/lib/mock/products";
 import { cn, formatPrice, cartTotal } from "@/lib/utils";
 import { Product } from "@/types";
-import { mealSuggestions, popularProducts } from "@/lib/mock/suggestions";
+import { mealSuggestions } from "@/lib/mock/suggestions";
 import { PackagesSection } from "@/components/shared/PackagesSection";
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
@@ -427,6 +427,7 @@ export default function DashboardPage() {
     const fetchCo2Distance = useStore((s) => s.fetchCo2Distance);
 
     const [bundleTab, setBundleTab] = useState<"reorder" | "topup">("topup");
+    const [similarItems, setSimilarItems] = useState<{ product: Product; percentage: number }[]>([]);
 
     useEffect(() => {
         if (!persona) router.push("/onboarding");
@@ -436,6 +437,15 @@ export default function DashboardPage() {
         fetchCo2Distance();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (!persona) return;
+        fetch(`/api/recommendations/similar?customerId=${persona.id}`)
+            .then((r) => r.json())
+            .then((data) => { if (data.items) setSimilarItems(data.items); })
+            .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [persona?.id]);
 
     if (!persona) return null;
 
@@ -452,17 +462,11 @@ export default function DashboardPage() {
         )
         .slice(0, 8);
 
-    const personaPopular = popularProducts[persona.id] ?? [];
-
-    
-    const popular = products.filter((p) => !inCartIds.has(p.id)).slice(5, 13);
-
-    const matchTags =
-        {
-            schmidt: `${persona.household.size} people · Family · ~${persona.household.weeklyBudget} €/week`,
-            lena: `${persona.household.size} person · Flexitarian · ~${persona.household.weeklyBudget} €/week`,
-            wg: `${persona.household.size} people · Vegetarian · ~${persona.household.weeklyBudget} €/week`,
-        }[persona.id] ?? "";
+    const matchTags = [
+        `${persona.household.size} ${persona.household.size === 1 ? "person" : "people"}`,
+        persona.household.dietStyle.charAt(0).toUpperCase() + persona.household.dietStyle.slice(1),
+        `~${persona.household.weeklyBudget} €/week`,
+    ].join(" · ");
 
     return (
         <div className="min-h-screen bg-[#F5F4F0] pb-24">
@@ -596,7 +600,9 @@ export default function DashboardPage() {
                 <PackagesSection />
 
                 {/* ─── Section 3d: Popular with similar households ─── */}
-                <PopularSection items={personaPopular} matchTags={matchTags} />
+                {similarItems.length > 0 && (
+                    <PopularSection items={similarItems} matchTags={matchTags} />
+                )}
                 {/* Quick stats */}
                 <div className="grid grid-cols-3 gap-3">
                     <div className="bg-white rounded-2xl p-3 text-center shadow-card">
