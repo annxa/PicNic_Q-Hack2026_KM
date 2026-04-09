@@ -125,6 +125,7 @@ export default function OnboardingPage() {
 
     // Register state
     const [registerName,       setRegisterName]       = useState("");
+    const [registerNameError,  setRegisterNameError]  = useState("");
     const [selectedTypes,      setSelectedTypes]      = useState<PersonaType[]>([]);
     const [householdSize,      setHouseholdSize]      = useState(2);
     const [hasChildren,        setHasChildren]        = useState(false);
@@ -169,7 +170,13 @@ export default function OnboardingPage() {
                 intolerances: activeRestrictions,
             }),
         });
-        const { customerId } = await res.json();
+        const data = await res.json();
+        if (!res.ok) {
+            setRegisterStep(0);
+            setRegisterNameError(data.error ?? "Registration failed.");
+            return;
+        }
+        const { customerId } = data;
 
         const customPersona: PersonaFull = {
             ...base,
@@ -180,6 +187,20 @@ export default function OnboardingPage() {
         setHousehold({ ...base.household, size: householdSize, hasKids: hasChildren });
         setRestrictions(activeRestrictions);
         router.push("/dashboard");
+    };
+
+    const handleRegisterContinue = async () => {
+        const checkRes = await fetch("/api/register/check-name", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: registerName.trim() }),
+        });
+        if (!checkRes.ok) {
+            const data = await checkRes.json();
+            setRegisterNameError(data.error ?? "Name already taken.");
+            return;
+        }
+        setRegisterStep(1);
     };
 
     const toggleRestriction = (r: Restriction) =>
@@ -368,9 +389,17 @@ export default function OnboardingPage() {
                                 placeholder="Your name"
                                 value={registerName}
                                 autoFocus
-                                onChange={(e) => setRegisterName(e.target.value)}
-                                className="w-full rounded-2xl border-2 border-[#E2E1DD] bg-white px-4 py-4 text-base outline-none transition-all focus:border-[#E1141C] mb-5"
+                                onChange={(e) => { setRegisterName(e.target.value); setRegisterNameError(""); }}
+                                className={cn(
+                                    "w-full rounded-2xl border-2 px-4 py-4 text-base outline-none transition-all",
+                                    registerNameError
+                                        ? "border-red-400 bg-red-50 mb-1"
+                                        : "border-[#E2E1DD] bg-white focus:border-[#E1141C] mb-5"
+                                )}
                             />
+                            {registerNameError && (
+                                <p className="text-sm text-red-500 mb-4 px-1">{registerNameError}</p>
+                            )}
 
                             <div className="flex items-center justify-between mb-3">
                                 <p className="text-sm font-semibold text-gray-700">
@@ -565,7 +594,7 @@ export default function OnboardingPage() {
 
                     {mode === "register" && registerStep === 0 && (
                         <button
-                            onClick={() => setRegisterStep(1)}
+                            onClick={handleRegisterContinue}
                             disabled={!registerName.trim() || selectedTypes.length === 0}
                             className="flex-1 h-14 btn-picnic flex items-center justify-center gap-2 text-base"
                         >
