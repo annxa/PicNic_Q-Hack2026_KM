@@ -13,6 +13,7 @@ import {
     Leaf,
     ChefHat,
     Zap,
+    Search,
 } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { BottomNav } from "@/components/shared/BottomNav";
@@ -322,6 +323,8 @@ export default function CartPage() {
 
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const [checkoutDone, setCheckoutDone] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchFocused, setSearchFocused] = useState(false);
 
     useEffect(() => {
         if (!persona) router.push("/onboarding");
@@ -386,6 +389,41 @@ export default function CartPage() {
                         {persona.deliverySlot}
                     </span>
                 </p>
+            </div>
+
+            {/* ─── Search bar ─── */}
+            <div className="px-4 pt-4">
+                <div className={cn(
+                    "flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200",
+                    searchFocused
+                        ? "bg-white shadow-md ring-2 ring-[#E1141C]/30"
+                        : "bg-white shadow-sm ring-1 ring-gray-100"
+                )}>
+                    <Search
+                        size={17}
+                        className={cn(
+                            "flex-shrink-0 transition-colors",
+                            searchFocused ? "text-[#E1141C]" : "text-gray-400"
+                        )}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Search and add products…"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => setSearchFocused(true)}
+                        onBlur={() => setSearchFocused(false)}
+                        className="flex-1 bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none"
+                    />
+                    {searchQuery.length > 0 && (
+                        <button
+                            onClick={() => setSearchQuery("")}
+                            className="flex-shrink-0 w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-300 transition-colors"
+                        >
+                            <span className="text-[10px] font-bold leading-none">✕</span>
+                        </button>
+                    )}
+                </div>
             </div>
 
             <div className="px-4 py-4 space-y-4">
