@@ -1,6 +1,6 @@
 import requests
 
-BASE_URL = "http://localhost:5000"
+BASE_URL = "http://localhost:5001"
 
 
 def setup_database() -> dict:
@@ -67,17 +67,16 @@ def get_customer_orders(customer_id: str) -> list[dict]:
 
 
 def recommend_by_persona(persona: str) -> dict:
-    """POST /recommendations/persona — return top products for similar personas.
+    """POST /recommendations/persona — return top product and similarity for the 3 closest personas.
 
     Args:
         persona: name of an existing persona (e.g. "fitness", "seniors")
 
     Returns:
-        {
-            "input_persona": str,
-            "similar_customers": [{"name": str, "persona": str}, ...],
-            "top_products": [{"product": str, "total_ordered": int}, ...]
-        }
+        [
+            {"similarity": float, "top_product": str | None},
+            ...  # 3 entries
+        ]
     """
     response = requests.post(
         f"{BASE_URL}/recommendations/persona",
@@ -97,7 +96,7 @@ if __name__ == "__main__":
     print("\n=== Add customer ===")
     customer = add_customer(
         name="Test User",
-        email="test@example.com",
+        email=f"test_{id(object())}@example.com",
         diet="vegan",
         age_range="26-35",
         location="Amsterdam",
