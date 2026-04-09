@@ -33,11 +33,11 @@ export default function ProfilePage() {
   const totalCO2 = currentPersona.orderHistory.reduce((s, o) => s + o.co2Saved, 0);
 
   return (
-    <div className="min-h-screen bg-[#F5F4F0] pb-24">
+    <div className="min-h-screen bg-[#F8F5F2] pb-24">
       <DemoBanner />
 
       {/* Hero */}
-      <div className="bg-[#E1141C] px-5 pt-6 pb-10">
+      <div className="bg-[#E1171E] px-5 pt-6 pb-10">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-4xl">
             {currentPersona.avatar}
@@ -57,7 +57,7 @@ export default function ProfilePage() {
             <p className="text-[10px] text-gray-500 font-medium">Bestellungen</p>
           </div>
           <div className="text-center border-x border-gray-100">
-            <p className="text-xl font-black text-[#E1141C]">{formatPrice(totalSpent)}</p>
+            <p className="text-xl font-black text-[#E1171E]">{formatPrice(totalSpent)}</p>
             <p className="text-[10px] text-gray-500 font-medium">Ausgegeben</p>
           </div>
           <div className="text-center">
@@ -73,7 +73,7 @@ export default function ProfilePage() {
               <ShoppingBag size={14} className="text-gray-500" />
               <span className="text-sm font-bold text-gray-900">Letzte Bestellungen</span>
             </div>
-            <span className="text-xs text-[#E1141C] font-semibold">Alle anzeigen</span>
+            <span className="text-xs text-[#E1171E] font-semibold">Alle anzeigen</span>
           </div>
           {currentPersona.orderHistory.slice(0, 3).map((order) => (
             <div key={order.id} className="flex items-center justify-between px-4 py-3 border-b border-gray-50 last:border-0">
@@ -112,7 +112,7 @@ export default function ProfilePage() {
                 <p className="text-xs text-gray-400">{p.tagline}</p>
               </div>
               {currentPersona.id === p.id ? (
-                <Star size={14} className="text-[#E1141C] fill-[#E1141C]" />
+                <Star size={14} className="text-[#E1171E] fill-[#E1171E]" />
               ) : (
                 <ChevronRight size={14} className="text-gray-300" />
               )}
@@ -131,8 +131,8 @@ export default function ProfilePage() {
               onClick={() => { if (danger) router.push("/onboarding"); }}
               className="w-full flex items-center gap-3 px-4 py-4 border-b border-gray-50 last:border-0 tap-active"
             >
-              <Icon size={18} className={danger ? "text-[#E1141C]" : "text-gray-500"} />
-              <span className={cn("text-sm font-medium flex-1 text-left", danger ? "text-[#E1141C]" : "text-gray-700")}>
+              <Icon size={18} className={danger ? "text-[#E1171E]" : "text-gray-500"} />
+              <span className={cn("text-sm font-medium flex-1 text-left", danger ? "text-[#E1171E]" : "text-gray-700")}>
                 {label}
               </span>
               <ChevronRight size={14} className="text-gray-300" />

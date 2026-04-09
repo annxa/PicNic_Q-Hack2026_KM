@@ -69,7 +69,7 @@ function ProductRow({ product }: { product: Product }) {
                         "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200",
                         flash || inCart
                             ? "bg-emerald-500 scale-95"
-                            : "bg-[#E1141C] active:scale-90"
+                            : "bg-[#E1171E] active:scale-90"
                     )}
                 >
                     {flash || inCart
@@ -115,7 +115,7 @@ export default function StorePage() {
     }, {});
 
     return (
-        <div className="min-h-screen bg-[#F5F4F0] pb-24">
+        <div className="min-h-screen bg-[#F8F5F2] pb-24">
             <DemoBanner />
 
             {/* Sticky header */}
@@ -131,14 +131,14 @@ export default function StorePage() {
                 <div className={cn(
                     "flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200",
                     focused
-                        ? "bg-white shadow-md ring-2 ring-[#E1141C]/30"
-                        : "bg-[#F5F4F0] ring-1 ring-transparent"
+                        ? "bg-white shadow-md ring-2 ring-[#E1171E]/30"
+                        : "bg-[#F8F5F2] ring-1 ring-transparent"
                 )}>
                     <Search
                         size={17}
                         className={cn(
                             "flex-shrink-0 transition-colors",
-                            focused ? "text-[#E1141C]" : "text-gray-400"
+                            focused ? "text-[#E1171E]" : "text-gray-400"
                         )}
                     />
                     <input

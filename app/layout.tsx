@@ -22,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de">
-      <body className={`${inter.variable} bg-[#F5F4F0] min-h-screen`}>
+      <body className={`${inter.variable} bg-[#F8F5F2] min-h-screen`}>
         <div className="phone-frame">
           {children}
         </div>

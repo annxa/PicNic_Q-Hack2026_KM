@@ -637,7 +637,7 @@ export async function GET() {
 
       const meta = PERSONA_META[c.persona_name ?? ""] ?? {
         avatar: "👤",
-        color: "#E1141C",
+        color: "#E1171E",
         description: "",
       };
       const deliverySlot = DELIVERY_SLOTS[c.persona_name ?? ""] ?? "Mi 17–18 Uhr";

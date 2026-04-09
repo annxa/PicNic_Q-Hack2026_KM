@@ -60,7 +60,7 @@ function Section({
                             {title}
                         </span>
                         {badge !== undefined && badge > 0 && (
-                            <span className="bg-[#E1141C] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                            <span className="bg-[#E1171E] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                                 {badge}
                             </span>
                         )}
@@ -144,7 +144,7 @@ function CartItemRow({
                     {item.product.brand} · {item.product.unit}
                 </p>
                 {item.addedReason && (
-                    <p className="text-[10px] text-[#E1141C] mt-0.5 leading-tight italic">
+                    <p className="text-[10px] text-[#E1171E] mt-0.5 leading-tight italic">
                         {item.addedReason}
                     </p>
                 )}
@@ -234,7 +234,7 @@ function LowStockItem({ item }: { item: import("@/types").PantryItem }) {
                     "px-3 py-1.5 rounded-xl text-xs font-bold flex-shrink-0 transition-all",
                     inCart
                         ? "bg-emerald-100 text-emerald-600"
-                        : "bg-[#E1141C] text-white active:scale-95",
+                        : "bg-[#E1171E] text-white active:scale-95",
                 )}
             >
                 {inCart ? "✓ Added" : "+ Add"}
@@ -356,7 +356,7 @@ export default function CartPage() {
     const personaMeals = mealSuggestions[persona.id] ?? [];
 
     return (
-        <div className="min-h-screen bg-[#F5F4F0] pb-24">
+        <div className="min-h-screen bg-[#F8F5F2] pb-24">
             <DemoBanner />
 
             {/* Header */}
@@ -414,7 +414,7 @@ export default function CartPage() {
                                     </div>
                                 ))}
                                 <div className="px-4 py-3 text-center">
-                                    <p className="text-xs text-[#E1141C] font-semibold flex items-center justify-center gap-1.5">
+                                    <p className="text-xs text-[#E1171E] font-semibold flex items-center justify-center gap-1.5">
                                         <Sparkles
                                             size={13}
                                             className="animate-spin"
@@ -441,7 +441,7 @@ export default function CartPage() {
                         <button
                             onClick={regenerateCart}
                             disabled={isRegenerating}
-                            className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#E1141C] rounded-2xl text-[#E1141C] text-sm font-bold tap-active disabled:opacity-60"
+                            className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-[#E1171E] rounded-2xl text-[#E1171E] text-sm font-bold tap-active disabled:opacity-60"
                         >
                             <Sparkles
                                 size={15}

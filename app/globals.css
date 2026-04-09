@@ -3,8 +3,16 @@
 @tailwind utilities;
 
 :root {
-  --picnic-red: #E1141C;
-  --picnic-green: #3E8B3E;
+  --picnic-red:    #E1171E;
+  --picnic-red2:   #B40117;
+  --picnic-green:  #308807;
+  --picnic-green8: #295813;
+  --picnic-grey0:  #FCFAF9;
+  --picnic-grey1:  #F8F5F2;
+  --picnic-grey2:  #C9C6C3;
+  --picnic-grey3:  #787570;
+  --picnic-grey4:  #5B534E;
+  --picnic-grey5:  #333333;
 }
 
 * {
@@ -15,7 +23,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #F5F4F0;
+  background: #F8F5F2;
   font-family: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-tap-highlight-color: transparent;
 }
@@ -25,7 +33,7 @@ body {
   max-width: 430px;
   min-height: 100dvh;
   margin: 0 auto;
-  background: #F5F4F0;
+  background: #F8F5F2;
   position: relative;
   overflow-x: hidden;
 }
@@ -43,9 +51,9 @@ body {
 .shimmer {
   background: linear-gradient(
     90deg,
-    #EFEEE9 25%,
-    #E5E4DF 50%,
-    #EFEEE9 75%
+    #F8F5F2 25%,
+    #EAE7E4 50%,
+    #F8F5F2 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
@@ -84,7 +92,7 @@ body {
 
 /* Picnic primary button — flat red, pill-shaped (per building blocks) */
 .btn-picnic {
-  background: #E1141C;
+  background: #E1171E;
   color: white;
   border-radius: 9999px;
   font-weight: 600;
@@ -103,7 +111,7 @@ body {
 
 /* Picnic green button — for add-to-cart and eco actions */
 .btn-picnic-green {
-  background: #3E8B3E;
+  background: #308807;
   color: white;
   border-radius: 9999px;
   font-weight: 600;
@@ -136,7 +144,7 @@ input[type="range"]::-webkit-slider-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #E1141C;
+  background: #E1171E;
   cursor: pointer;
   box-shadow: 0 1px 4px rgba(225, 20, 28, 0.3);
 }
@@ -144,7 +152,7 @@ input[type="range"]::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #E1141C;
+  background: #E1171E;
   cursor: pointer;
   border: none;
 }

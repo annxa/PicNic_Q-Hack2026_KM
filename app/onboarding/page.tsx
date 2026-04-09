@@ -228,7 +228,7 @@ export default function OnboardingPage() {
                 <div className="flex items-center gap-2.5 mb-6">
                     <PicnicLogo size={40} />
                     <span className="text-[22px] font-semibold text-gray-900 tracking-tight">
-                        picnic<span className="text-[#E1141C] font-bold">+</span>
+                        picnic<span className="text-[#E1171E] font-bold">+</span>
                     </span>
                 </div>
 
@@ -241,10 +241,10 @@ export default function OnboardingPage() {
                                     className={cn(
                                         "h-1 rounded-full transition-all duration-300",
                                         i === registerStep
-                                            ? "bg-[#E1141C] w-10"
+                                            ? "bg-[#E1171E] w-10"
                                             : i < registerStep
-                                              ? "bg-[#E1141C]/40 w-5"
-                                              : "bg-[#E2E1DD] w-5",
+                                              ? "bg-[#E1171E]/40 w-5"
+                                              : "bg-[#C9C6C3] w-5",
                                     )}
                                 />
                             ))}
@@ -272,17 +272,17 @@ export default function OnboardingPage() {
                             <h1 className="text-[28px] font-semibold text-gray-900 mb-1 tracking-tight">
                                 Welcome to picnic+
                             </h1>
-                            <p className="text-sm text-[#9B9B9B] mb-8">
+                            <p className="text-sm text-[#787570] mb-8">
                                 Log in to your account or create a new one.
                             </p>
 
                             <div className="space-y-3">
                                 <button
                                     onClick={() => setMode("login")}
-                                    className="w-full flex items-center gap-4 rounded-2xl border-2 border-[#E2E1DD] bg-white p-5 text-left transition-all hover:border-[#E1141C]/40"
+                                    className="w-full flex items-center gap-4 rounded-2xl border-2 border-[#C9C6C3] bg-white p-5 text-left transition-all hover:border-[#E1171E]/40"
                                 >
                                     <div className="w-12 h-12 rounded-full bg-[#FFF0F0] flex items-center justify-center flex-shrink-0">
-                                        <User size={22} className="text-[#E1141C]" />
+                                        <User size={22} className="text-[#E1171E]" />
                                     </div>
                                     <div className="flex-1">
                                         <p className="font-bold text-gray-900">Log in</p>
@@ -293,10 +293,10 @@ export default function OnboardingPage() {
 
                                 <button
                                     onClick={() => setMode("register")}
-                                    className="w-full flex items-center gap-4 rounded-2xl border-2 border-[#E2E1DD] bg-white p-5 text-left transition-all hover:border-[#E1141C]/40"
+                                    className="w-full flex items-center gap-4 rounded-2xl border-2 border-[#C9C6C3] bg-white p-5 text-left transition-all hover:border-[#E1171E]/40"
                                 >
                                     <div className="w-12 h-12 rounded-full bg-[#FFF0F0] flex items-center justify-center flex-shrink-0">
-                                        <UserPlus size={22} className="text-[#E1141C]" />
+                                        <UserPlus size={22} className="text-[#E1171E]" />
                                     </div>
                                     <div className="flex-1">
                                         <p className="font-bold text-gray-900">Create account</p>
@@ -320,7 +320,7 @@ export default function OnboardingPage() {
                             <h1 className="text-[28px] font-semibold text-gray-900 mb-1 tracking-tight">
                                 Welcome back!
                             </h1>
-                            <p className="text-sm text-[#9B9B9B] mb-6">
+                            <p className="text-sm text-[#787570] mb-6">
                                 Enter your name to continue.
                             </p>
 
@@ -335,7 +335,7 @@ export default function OnboardingPage() {
                                     "w-full rounded-2xl border-2 px-4 py-4 text-base outline-none transition-all",
                                     loginError
                                         ? "border-red-400 bg-red-50"
-                                        : "border-[#E2E1DD] bg-white focus:border-[#E1141C]"
+                                        : "border-[#C9C6C3] bg-white focus:border-[#E1171E]"
                                 )}
                             />
                             {loginError && (
@@ -354,8 +354,8 @@ export default function OnboardingPage() {
                                                 className={cn(
                                                     "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all",
                                                     loginName === p.name
-                                                        ? "bg-[#E1141C] border-[#E1141C] text-white"
-                                                        : "bg-white border-[#E2E1DD] text-gray-600 hover:border-[#E1141C]/40"
+                                                        ? "bg-[#E1171E] border-[#E1171E] text-white"
+                                                        : "bg-white border-[#C9C6C3] text-gray-600 hover:border-[#E1171E]/40"
                                                 )}
                                             >
                                                 <span>{p.avatar}</span>
@@ -380,7 +380,7 @@ export default function OnboardingPage() {
                             <h1 className="text-[28px] font-semibold text-gray-900 mb-1 tracking-tight">
                                 Create your profile
                             </h1>
-                            <p className="text-sm text-[#9B9B9B] mb-5">
+                            <p className="text-sm text-[#787570] mb-5">
                                 Tell us your name and which shopper type fits you best.
                             </p>
 
@@ -394,7 +394,7 @@ export default function OnboardingPage() {
                                     "w-full rounded-2xl border-2 px-4 py-4 text-base outline-none transition-all",
                                     registerNameError
                                         ? "border-red-400 bg-red-50 mb-1"
-                                        : "border-[#E2E1DD] bg-white focus:border-[#E1141C] mb-5"
+                                        : "border-[#C9C6C3] bg-white focus:border-[#E1171E] mb-5"
                                 )}
                             />
                             {registerNameError && (
@@ -428,10 +428,10 @@ export default function OnboardingPage() {
                                             className={cn(
                                                 "w-full text-left rounded-2xl border-2 p-4 transition-all",
                                                 isSelected
-                                                    ? "border-[#E1141C] bg-[#FDECEA]"
+                                                    ? "border-[#E1171E] bg-[#FDECEA]"
                                                     : isDisabled
-                                                      ? "border-[#E2E1DD] bg-[#FAFAFA] opacity-40 cursor-not-allowed"
-                                                      : "border-[#E2E1DD] bg-white hover:border-[#E1141C]/30"
+                                                      ? "border-[#C9C6C3] bg-[#FAFAFA] opacity-40 cursor-not-allowed"
+                                                      : "border-[#C9C6C3] bg-white hover:border-[#E1171E]/30"
                                             )}
                                         >
                                             <div className="flex items-center gap-3">
@@ -444,7 +444,7 @@ export default function OnboardingPage() {
                                                             {type.name}
                                                         </span>
                                                         {isSelected && (
-                                                            <span className="text-[#E1141C] text-base flex-shrink-0">✓</span>
+                                                            <span className="text-[#E1171E] text-base flex-shrink-0">✓</span>
                                                         )}
                                                     </div>
                                                     <p className="text-xs text-gray-500 mt-0.5 leading-snug">
@@ -457,7 +457,7 @@ export default function OnboardingPage() {
                                                                 className={cn(
                                                                     "text-[10px] font-medium px-2 py-0.5 rounded-full",
                                                                     isSelected
-                                                                        ? "bg-[#E1141C]/15 text-[#E1141C]"
+                                                                        ? "bg-[#E1171E]/15 text-[#E1171E]"
                                                                         : "bg-[#F0EFEB] text-gray-500"
                                                                 )}
                                                             >
@@ -486,7 +486,7 @@ export default function OnboardingPage() {
                             <h1 className="text-[28px] font-semibold text-gray-900 mb-1 tracking-tight">
                                 Your preferences
                             </h1>
-                            <p className="text-sm text-[#9B9B9B] mb-6">
+                            <p className="text-sm text-[#787570] mb-6">
                                 Help us personalize your shopping.
                             </p>
 
@@ -503,8 +503,8 @@ export default function OnboardingPage() {
                                             className={cn(
                                                 "w-12 h-12 rounded-full text-sm font-semibold border transition-all",
                                                 householdSize === n
-                                                    ? "bg-[#E1141C] border-[#E1141C] text-white"
-                                                    : "bg-white border-[#E2E1DD] text-[#3D3D3D]"
+                                                    ? "bg-[#E1171E] border-[#E1171E] text-white"
+                                                    : "bg-white border-[#C9C6C3] text-[#333333]"
                                             )}
                                         >
                                             {n}
@@ -529,8 +529,8 @@ export default function OnboardingPage() {
                                             className={cn(
                                                 "px-6 py-2.5 rounded-full text-sm font-semibold border transition-all",
                                                 hasChildren === value
-                                                    ? "bg-[#E1141C] border-[#E1141C] text-white"
-                                                    : "bg-white border-[#E2E1DD] text-[#3D3D3D]"
+                                                    ? "bg-[#E1171E] border-[#E1171E] text-white"
+                                                    : "bg-white border-[#C9C6C3] text-[#333333]"
                                             )}
                                         >
                                             {label}
@@ -552,8 +552,8 @@ export default function OnboardingPage() {
                                             className={cn(
                                                 "flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium border transition-all",
                                                 activeRestrictions.includes(opt.id)
-                                                    ? "bg-[#E1141C] border-[#E1141C] text-white"
-                                                    : "bg-white border-[#E2E1DD] text-[#3D3D3D]"
+                                                    ? "bg-[#E1171E] border-[#E1171E] text-white"
+                                                    : "bg-white border-[#C9C6C3] text-[#333333]"
                                             )}
                                         >
                                             <span>{opt.emoji}</span>
@@ -576,7 +576,7 @@ export default function OnboardingPage() {
                 <div className="px-5 pb-8 pt-4 flex gap-3">
                     <button
                         onClick={goBack}
-                        className="w-14 h-14 flex items-center justify-center rounded-full bg-[#EFEEE9] text-[#6D6D6D] flex-shrink-0"
+                        className="w-14 h-14 flex items-center justify-center rounded-full bg-[#F8F5F2] text-[#5B534E] flex-shrink-0"
                     >
                         <ChevronLeft size={20} />
                     </button>

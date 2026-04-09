@@ -74,7 +74,7 @@ export function ProductCard({ product, reason, showCO2 = true, compact = false }
 
         {/* Local badge (top-left) */}
         {product.localNote && (
-          <span className="absolute top-2 left-2 text-[10px] bg-white/90 text-[#3E8B3E] font-semibold px-1.5 py-0.5 rounded-full leading-none">
+          <span className="absolute top-2 left-2 text-[10px] bg-white/90 text-[#308807] font-semibold px-1.5 py-0.5 rounded-full leading-none">
             📍 lokal
           </span>
         )}
@@ -98,7 +98,7 @@ export function ProductCard({ product, reason, showCO2 = true, compact = false }
         </p>
 
         {/* Brand — Body 2: 14px Regular, gray */}
-        <p className="text-[11px] text-[#9B9B9B] mt-0.5 leading-tight truncate">
+        <p className="text-[11px] text-[#787570] mt-0.5 leading-tight truncate">
           {product.brand}
         </p>
 
@@ -109,7 +109,7 @@ export function ProductCard({ product, reason, showCO2 = true, compact = false }
               {formatPrice(product.price)}
             </span>
             {/* Unit — Caption 1: 12px, gray */}
-            <p className="text-[10px] text-[#9B9B9B] leading-tight truncate">{product.unit}</p>
+            <p className="text-[10px] text-[#787570] leading-tight truncate">{product.unit}</p>
           </div>
 
           {/* Add button — green circle per Picnic PDP style */}

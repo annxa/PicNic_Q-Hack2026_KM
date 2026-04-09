@@ -198,7 +198,7 @@ function BuilderModal({
                 <select
                   value={emoji}
                   onChange={(e) => setEmoji(e.target.value)}
-                  className="appearance-none w-14 h-10 bg-gray-100 rounded-xl text-xl text-center cursor-pointer border-0 focus:ring-2 focus:ring-[#E1141C]"
+                  className="appearance-none w-14 h-10 bg-gray-100 rounded-xl text-xl text-center cursor-pointer border-0 focus:ring-2 focus:ring-[#E1171E]"
                 >
                   {EMOJI_OPTIONS.map((e) => (
                     <option key={e} value={e}>
@@ -215,7 +215,7 @@ function BuilderModal({
                 placeholder="My package name…"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full h-10 px-3 bg-gray-100 rounded-xl text-sm text-gray-900 border-0 focus:ring-2 focus:ring-[#E1141C] outline-none"
+                className="w-full h-10 px-3 bg-gray-100 rounded-xl text-sm text-gray-900 border-0 focus:ring-2 focus:ring-[#E1171E] outline-none"
               />
             </div>
           </div>
@@ -265,7 +265,7 @@ function BuilderModal({
                       )}
                       <button
                         onClick={() => adjust(product.id, 1)}
-                        className="w-6 h-6 bg-[#E1141C] rounded-lg flex items-center justify-center active:scale-90"
+                        className="w-6 h-6 bg-[#E1171E] rounded-lg flex items-center justify-center active:scale-90"
                       >
                         <Plus size={10} className="text-white" />
                       </button>
@@ -287,7 +287,7 @@ function BuilderModal({
           <button
             onClick={handleSave}
             disabled={!name.trim() || selectedItems.length === 0}
-            className="w-full bg-[#E1141C] text-white rounded-2xl py-3.5 text-sm font-bold flex items-center justify-center gap-2 disabled:opacity-40 active:scale-[0.98] transition-transform"
+            className="w-full bg-[#E1171E] text-white rounded-2xl py-3.5 text-sm font-bold flex items-center justify-center gap-2 disabled:opacity-40 active:scale-[0.98] transition-transform"
           >
             <BookmarkPlus size={16} />
             Save Package
@@ -371,7 +371,7 @@ export function PackagesSection() {
           </div>
           <button
             onClick={() => setShowBuilder(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#E1141C] text-white rounded-xl text-xs font-bold active:scale-95 transition-transform"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#E1171E] text-white rounded-xl text-xs font-bold active:scale-95 transition-transform"
           >
             <Plus size={12} /> New
           </button>
@@ -380,7 +380,7 @@ export function PackagesSection() {
         {/* AI-suggested packages */}
         <div className="px-4 pt-3 pb-1">
           <div className="flex items-center gap-1.5 mb-2">
-            <Sparkles size={11} className="text-[#E1141C]" />
+            <Sparkles size={11} className="text-[#E1171E]" />
             <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
               AI picks for you
             </p>

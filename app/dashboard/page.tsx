@@ -57,7 +57,7 @@ function Section({
                             {title}
                         </span>
                         {badge !== undefined && badge > 0 && (
-                            <span className="bg-[#E1141C] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                            <span className="bg-[#E1171E] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
                                 {badge}
                             </span>
                         )}
@@ -325,7 +325,7 @@ function CO2ProgressCard() {
 
                         <button
                             onClick={() => setShowDetail(false)}
-                            className="w-full mt-4 py-3.5 bg-[#EFEEE9] rounded-full text-[15px] font-semibold text-[#3D3D3D]"
+                            className="w-full mt-4 py-3.5 bg-[#F8F5F2] rounded-full text-[15px] font-semibold text-[#333333]"
                         >
                             Close
                         </button>
@@ -469,7 +469,7 @@ export default function DashboardPage() {
     ].join(" · ");
 
     return (
-        <div className="min-h-screen bg-[#F5F4F0] pb-24">
+        <div className="min-h-screen bg-[#F8F5F2] pb-24">
             <DemoBanner />
 
             {/* Header */}
@@ -482,28 +482,28 @@ export default function DashboardPage() {
                             <h1 className="text-[18px] font-semibold text-gray-900 leading-tight tracking-tight">
                                 Hi, {persona.name.split(" ")[0]}!
                             </h1>
-                            <div className="flex items-center gap-1 text-[11px] text-[#3E8B3E] font-medium">
+                            <div className="flex items-center gap-1 text-[11px] text-[#308807] font-medium">
                                 <MapPin size={10} />
                                 <span>Hub Viernheim · Fresh today</span>
                             </div>
                         </div>
                     </div>
-                    <button className="w-9 h-9 bg-[#F5F4F0] rounded-full flex items-center justify-center relative">
-                        <Bell size={18} className="text-[#6D6D6D]" />
-                        <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-[#E1141C] rounded-full" />
+                    <button className="w-9 h-9 bg-[#F8F5F2] rounded-full flex items-center justify-center relative">
+                        <Bell size={18} className="text-[#5B534E]" />
+                        <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-[#E1171E] rounded-full" />
                     </button>
                 </div>
 
                 {/* Delivery slot */}
                 <div className="flex items-center gap-2 bg-[#FDECEA] rounded-2xl px-3 py-2.5">
-                    <Zap size={14} className="text-[#E1141C]" />
+                    <Zap size={14} className="text-[#E1171E]" />
                     <p className="text-[12px] font-medium text-gray-700">
                         Next delivery:{" "}
-                        <span className="text-[#E1141C] font-semibold">
+                        <span className="text-[#E1171E] font-semibold">
                             {persona.deliverySlot}
                         </span>
                     </p>
-                    <span className="ml-auto text-[11px] text-[#9B9B9B]">
+                    <span className="ml-auto text-[11px] text-[#787570]">
                         Change →
                     </span>
                 </div>
@@ -548,7 +548,7 @@ export default function DashboardPage() {
                         <h2 className="text-[18px] font-semibold text-gray-900 tracking-tight">
                             For you
                         </h2>
-                        <span className="text-sm text-[#9B9B9B]">
+                        <span className="text-sm text-[#787570]">
                             See all &gt;
                         </span>
                     </div>
@@ -578,11 +578,11 @@ export default function DashboardPage() {
                         <h2 className="text-[18px] font-semibold text-gray-900 tracking-tight">
                             Popular in your area
                         </h2>
-                        <span className="text-sm text-[#9B9B9B]">
+                        <span className="text-sm text-[#787570]">
                             See all &gt;
                         </span>
                     </div>
-                    <p className="text-[12px] text-[#9B9B9B] mb-3">
+                    <p className="text-[12px] text-[#787570] mb-3">
                         Trending with similar households this week
                     </p>
                     <div className="flex gap-3 overflow-x-auto scroll-x pb-2 -mx-5 px-5">
@@ -606,18 +606,18 @@ export default function DashboardPage() {
                 {/* Quick stats */}
                 <div className="grid grid-cols-3 gap-3">
                     <div className="bg-white rounded-2xl p-3 text-center shadow-card">
-                        <p className="text-xl font-bold text-[#E1141C]">
+                        <p className="text-xl font-bold text-[#E1171E]">
                             {persona.orderHistory.length}
                         </p>
-                        <p className="text-[10px] text-[#9B9B9B] font-medium mt-0.5">
+                        <p className="text-[10px] text-[#787570] font-medium mt-0.5">
                             Orders
                         </p>
                     </div>
                     <div className="bg-white rounded-2xl p-3 text-center shadow-card">
-                        <p className="text-xl font-bold text-[#3E8B3E]">
+                        <p className="text-xl font-bold text-[#308807]">
                             {persona.co2SavedTotal}
                         </p>
-                        <p className="text-[10px] text-[#9B9B9B] font-medium mt-0.5">
+                        <p className="text-[10px] text-[#787570] font-medium mt-0.5">
                             kg CO₂ saved
                         </p>
                     </div>
@@ -630,7 +630,7 @@ export default function DashboardPage() {
                                 ) / persona.orderHistory.length,
                             )}
                         </p>
-                        <p className="text-[10px] text-[#9B9B9B] font-medium mt-0.5">
+                        <p className="text-[10px] text-[#787570] font-medium mt-0.5">
                             Avg. order
                         </p>
                     </div>

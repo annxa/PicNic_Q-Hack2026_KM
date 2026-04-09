@@ -7,7 +7,7 @@ import { CartLogo } from "@/components/shared/CartLogo";
 
 // Custom Picnic-style SVG icons matching the building blocks grid
 function DiscoverIcon({ active }: { active: boolean }) {
-    const c = active ? "#E1141C" : "#9B9B9B";
+    const c = active ? "#E1171E" : "#787570";
     return (
         <svg
             width="24"
@@ -61,7 +61,7 @@ function DiscoverIcon({ active }: { active: boolean }) {
 }
 
 function PantryIcon({ active }: { active: boolean }) {
-    const c = active ? "#E1141C" : "#9B9B9B";
+    const c = active ? "#E1171E" : "#787570";
     return (
         <svg
             width="24"
@@ -99,7 +99,7 @@ function PantryIcon({ active }: { active: boolean }) {
 }
 
 function StoreIcon({ active }: { active: boolean }) {
-    const c = active ? "#E1141C" : "#9B9B9B";
+    const c = active ? "#E1171E" : "#787570";
     return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -120,7 +120,7 @@ function StoreIcon({ active }: { active: boolean }) {
 }
 
 function ProfileIcon({ active }: { active: boolean }) {
-    const c = active ? "#E1141C" : "#9B9B9B";
+    const c = active ? "#E1171E" : "#787570";
     return (
         <svg
             width="24"
@@ -177,7 +177,7 @@ export function BottomNav() {
                             <div className="relative">
                                 <Icon active={active} />
                                 {isCart && totalItems > 0 && (
-                                    <span className="absolute -top-1 -right-2.5 min-w-[16px] h-4 flex items-center justify-center text-[10px] font-bold bg-[#E1141C] text-white rounded-full px-1 leading-none">
+                                    <span className="absolute -top-1 -right-2.5 min-w-[16px] h-4 flex items-center justify-center text-[10px] font-bold bg-[#E1171E] text-white rounded-full px-1 leading-none">
                                         {totalItems > 99 ? "99+" : totalItems}
                                     </span>
                                 )}
@@ -186,8 +186,8 @@ export function BottomNav() {
                                 className={cn(
                                     "text-[10px] font-medium",
                                     active
-                                        ? "text-[#E1141C]"
-                                        : "text-[#9B9B9B]",
+                                        ? "text-[#E1171E]"
+                                        : "text-[#787570]",
                                 )}
                             >
                                 {label}

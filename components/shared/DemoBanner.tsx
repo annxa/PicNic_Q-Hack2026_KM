@@ -6,7 +6,7 @@ export function DemoBanner() {
     const [dismissed, setDismissed] = useState(false);
     if (dismissed) return null;
     return (
-        <div className="flex items-center justify-between gap-2 px-3 py-2 bg-[#FBD92B] text-[#3D3D3D] text-[11px] font-medium sticky top-0 z-50">
+        <div className="flex items-center justify-between gap-2 px-3 py-2 bg-[#FBD92B] text-[#333333] text-[11px] font-medium sticky top-0 z-50">
             <span>🎬 Hackathon-Demo · Data is simulated</span>
             <button
                 onClick={() => setDismissed(true)}

@@ -76,7 +76,7 @@ function PantryItemCard({ item }: { item: PantryItem }) {
           "w-8 h-8 rounded-xl flex items-center justify-center transition-all flex-shrink-0",
           inCart
             ? "bg-emerald-100 text-emerald-600"
-            : "bg-[#E1141C] text-white active:scale-90"
+            : "bg-[#E1171E] text-white active:scale-90"
         )}
       >
         {inCart ? "✓" : <Plus size={14} />}
@@ -122,7 +122,7 @@ export default function PantryPage() {
     : 0;
 
   return (
-    <div className="min-h-screen bg-[#F5F4F0] pb-24">
+    <div className="min-h-screen bg-[#F8F5F2] pb-24">
       <DemoBanner />
 
       {/* Header */}
@@ -130,7 +130,7 @@ export default function PantryPage() {
         <div className="flex items-center justify-between mb-3">
           <div>
             <h1 className="text-[28px] font-semibold text-gray-900 tracking-tight">Vorratsschrank</h1>
-            <p className="text-[12px] text-[#9B9B9B] mt-0.5">
+            <p className="text-[12px] text-[#787570] mt-0.5">
               Automatisch aktualisiert nach jeder Bestellung
             </p>
           </div>
@@ -171,8 +171,8 @@ export default function PantryPage() {
                 filter === f
                   ? f === "urgent"
                     ? "bg-orange-500 text-white"
-                    : "bg-[#E1141C] text-white"
-                  : "bg-[#EFEEE9] text-[#6D6D6D]"
+                    : "bg-[#E1171E] text-white"
+                  : "bg-[#F8F5F2] text-[#5B534E]"
               )}
             >
               {f === "all" && "Alle"}
