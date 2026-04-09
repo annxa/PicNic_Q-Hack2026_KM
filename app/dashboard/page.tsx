@@ -11,7 +11,6 @@ import {
     TrendingUp,
     Zap,
     Users,
-    Package,
     ChevronDown,
     ChevronUp,
 } from "lucide-react";
@@ -24,6 +23,7 @@ import { products } from "@/lib/mock/products";
 import { cn, formatPrice, cartTotal } from "@/lib/utils";
 import { Product } from "@/types";
 import { mealSuggestions, popularProducts } from "@/lib/mock/suggestions";
+import { PackagesSection } from "@/components/shared/PackagesSection";
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
 function Section({
@@ -335,68 +335,6 @@ function CO2ProgressCard() {
         </>
     );
 }
-// ─── Bundle Card ──────────────────────────────────────────────────────────────
-function BundleCard({ bundle }: { bundle: import("@/types").Bundle }) {
-    const addToCart = useStore((s) => s.addToCart);
-    const [added, setAdded] = useState(false);
-
-    const handleAdd = () => {
-        bundle.items.forEach(({ product, quantity }) => {
-            addToCart({
-                product,
-                quantity,
-                addedReason: `From bundle "${bundle.name}"`,
-            });
-        });
-        setAdded(true);
-        setTimeout(() => setAdded(false), 2000);
-    };
-
-    return (
-        <div className="flex-shrink-0 w-56 bg-gray-50 rounded-2xl p-3.5">
-            <p className="text-sm font-bold text-gray-900 mb-0.5">
-                {bundle.name}
-            </p>
-            <p className="text-xs text-gray-500 mb-2">{bundle.description}</p>
-            <div className="flex gap-1 mb-2.5 flex-wrap">
-                {bundle.items.slice(0, 4).map(({ product }) => (
-                    <span key={product.id} className="text-lg">
-                        {product.emoji}
-                    </span>
-                ))}
-                {bundle.items.length > 4 && (
-                    <span className="text-xs text-gray-400 self-center">
-                        +{bundle.items.length - 4}
-                    </span>
-                )}
-            </div>
-            <div className="flex items-center justify-between">
-                <div>
-                    <span className="text-sm font-black text-gray-900">
-                        {formatPrice(bundle.totalPrice)}
-                    </span>
-                    {bundle.savings && (
-                        <span className="ml-1.5 text-[10px] bg-emerald-100 text-emerald-700 font-semibold px-1.5 rounded-full">
-                            -{formatPrice(bundle.savings)}
-                        </span>
-                    )}
-                </div>
-                <button
-                    onClick={handleAdd}
-                    className={cn(
-                        "px-3 py-1.5 rounded-xl text-xs font-bold transition-all",
-                        added
-                            ? "bg-emerald-500 text-white"
-                            : "bg-[#E1141C] text-white active:scale-95",
-                    )}
-                >
-                    {added ? "✓ Added" : "Add all items"}
-                </button>
-            </div>
-        </div>
-    );
-}
-
 // ─── Popular Section ──────────────────────────────────────────────────────────
 function PopularSection({
     items,
@@ -494,7 +432,6 @@ export default function DashboardPage() {
 
     useEffect(() => {
         if (!persona) router.push("/onboarding");
-        else fetchBundles();
     }, [persona, router]);
 
     useEffect(() => {
@@ -519,12 +456,7 @@ export default function DashboardPage() {
 
     const personaPopular = popularProducts[persona.id] ?? [];
 
-    const reorderBundles = storeBundles.filter((b) => b.category === "reorder");
-    const topupBundles = storeBundles.filter((b) => b.category === "topup");
-    const activeBundles =
-        bundleTab === "reorder" ? reorderBundles : topupBundles;
-
-    // Popular in region: random products
+    
     const popular = products.filter((p) => !inCartIds.has(p.id)).slice(5, 13);
 
     const matchTags =
@@ -662,38 +594,8 @@ export default function DashboardPage() {
                     </div>
                 </section>*/}
 
-                {/* ─── Section 3c: Bundles ─── */}
-                <Section
-                    icon={<Package size={16} className="text-purple-500" />}
-                    title="Bundles"
-                    subtitle="Proven bundles & top-up packs"
-                >
-                    {/* Tabs */}
-                    <div className="flex gap-2 px-4 pt-3 pb-2">
-                        {(["reorder", "topup"] as const).map((tab) => (
-                            <button
-                                key={tab}
-                                onClick={() => setBundleTab(tab)}
-                                className={cn(
-                                    "flex-1 py-2 rounded-xl text-xs font-bold transition-all",
-                                    bundleTab === tab
-                                        ? "bg-[#E1141C] text-white"
-                                        : "bg-[#EFEEE9] text-[#6D6D6D]",
-                                )}
-                            >
-                                {tab === "reorder"
-                                    ? "🔄 Order again"
-                                    : "➕ Restock categories"}
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className="flex gap-3 overflow-x-auto scroll-x px-4 pb-4 pt-1">
-                        {activeBundles.map((bundle) => (
-                            <BundleCard key={bundle.id} bundle={bundle} />
-                        ))}
-                    </div>
-                </Section>
+                {/* ─── Packages ─── */}
+                <PackagesSection />
 
                 {/* ─── Section 3d: Popular with similar households ─── */}
                 <PopularSection items={personaPopular} matchTags={matchTags} />

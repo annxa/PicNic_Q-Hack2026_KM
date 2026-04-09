@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Persona, CartItem, PantryItem, Household, Restriction, Bundle } from "@/types";
+import { Persona, CartItem, PantryItem, Household, Restriction, SavedPackage } from "@/types";
 
 interface Store {
   // State
@@ -9,7 +9,6 @@ interface Store {
   household: Household | null;
   restrictions: Restriction[];
   cart: CartItem[];
-  bundles: Bundle[];
   pantry: PantryItem[];
   co2SavedThisWeek: number;
   co2SavedThisMonth: number;
@@ -17,6 +16,7 @@ interface Store {
   co2SavedTotal: number;
   co2PerDelivery: number; // OSRM-calculated CO₂ saving per delivery (kg)
   isRegenerating: boolean;
+  customPackages: SavedPackage[]; // user-created packages (persisted)
 
   // Actions
   initPersona: (persona: Persona) => void;
@@ -26,10 +26,12 @@ interface Store {
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, delta: number) => void;
   regenerateCart: () => Promise<void>;
-  fetchBundles: () => Promise<void>;
   clearCart: () => void;
   fetchCo2Distance: () => Promise<void>;
   checkout: () => Promise<number>; // returns co2SavedKg
+  savePackage: (pkg: SavedPackage) => void;
+  deletePackage: (packageId: string) => void;
+  addPackageToCart: (pkg: SavedPackage) => void;
 }
 
 export const useStore = create<Store>()(
@@ -39,7 +41,6 @@ export const useStore = create<Store>()(
       household: null,
       restrictions: [],
       cart: [],
-      bundles: [],
       pantry: [],
       co2SavedThisWeek: 0,
       co2SavedThisMonth: 0,
@@ -47,6 +48,7 @@ export const useStore = create<Store>()(
       co2SavedTotal: 0,
       co2PerDelivery: 0,
       isRegenerating: false,
+      customPackages: [],
 
       initPersona: (persona) => {
         set({
@@ -112,20 +114,25 @@ export const useStore = create<Store>()(
         }
       },
 
-      fetchBundles: async () => {
-        const persona = get().currentPersona;
-        if (!persona) return;
-        try {
-          const res = await fetch(`/api/packages/suggest?customerId=${persona.id}`);
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          const bundles: Bundle[] = await res.json();
-          set({ bundles });
-        } catch (err) {
-          console.error("[fetchBundles]", err);
-        }
-      },
-
       clearCart: () => set({ cart: [] }),
+
+      savePackage: (pkg) =>
+        set((s) => ({ customPackages: [...s.customPackages, pkg] })),
+
+      deletePackage: (packageId) =>
+        set((s) => ({
+          customPackages: s.customPackages.filter((p) => p.id !== packageId),
+        })),
+
+      addPackageToCart: (pkg) => {
+        pkg.items.forEach((item) => {
+          get().addToCart({
+            product: item.product,
+            quantity: item.quantity,
+            addedReason: `From package: ${pkg.name}`,
+          });
+        });
+      },
 
       fetchCo2Distance: async () => {
         try {
@@ -182,6 +189,7 @@ export const useStore = create<Store>()(
         co2MonthlyGoal: state.co2MonthlyGoal,
         co2SavedTotal: state.co2SavedTotal,
         co2PerDelivery: state.co2PerDelivery,
+        customPackages: state.customPackages,
       }),
     }
   )

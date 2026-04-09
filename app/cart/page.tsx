@@ -11,19 +11,14 @@ import {
     ChevronUp,
     ShoppingBag,
     Leaf,
-    Package,
-    Users,
     ChefHat,
     Zap,
 } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { BottomNav } from "@/components/shared/BottomNav";
 import { DemoBanner } from "@/components/shared/DemoBanner";
-import {
-    bundles,
-    mealSuggestions,
-    popularProducts,
-} from "@/lib/mock/suggestions";
+import { PackagesSection } from "@/components/shared/PackagesSection";
+import { mealSuggestions } from "@/lib/mock/suggestions";
 import {
     cn,
     formatPrice,
@@ -31,7 +26,7 @@ import {
     co2ScoreColor,
     daysRemainingColor,
 } from "@/lib/utils";
-import { CartItem, Product } from "@/types";
+import { CartItem } from "@/types";
 
 // ─── Section wrapper ──────────────────────────────────────────────────────────
 function Section({
@@ -115,7 +110,7 @@ function CartItemRow({
     item: CartItem;
     isShimmering: boolean;
 }) {
-    const { updateQuantity, removeFromCart } = useStore();
+    const { updateQuantity } = useStore();
 
     return (
         <motion.div
@@ -484,6 +479,9 @@ export default function CartPage() {
                         </p>
                     </div>
                 )}
+
+                {/* ─── Packages ─── */}
+                <PackagesSection />
 
                 {/* ─── Section 3e: Try something new ─── */}
                 <Section

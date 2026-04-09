@@ -112,3 +112,14 @@ export interface Bundle {
   savings?: number;
   category: "reorder" | "topup";
 }
+
+export interface SavedPackage {
+  id: string;           // uuid, client-generated
+  name: string;
+  emoji: string;
+  description?: string;
+  items: { product: Product; quantity: number }[];
+  totalPrice: number;
+  isPreset: boolean;    // true = shipped with the app, false = user-created
+  createdAt: string;    // ISO date string
+}
