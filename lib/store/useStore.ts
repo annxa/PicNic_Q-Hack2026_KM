@@ -164,20 +164,34 @@ export const useStore = create<Store>()(
 
         if (!res.ok) throw new Error("Checkout failed");
 
-        const { co2SavedKg, newCo2Total } = (await res.json()) as {
+        const { co2SavedKg, newCo2Total, newOrder } = (await res.json()) as {
           co2SavedKg: number;
           newCo2Total: number;
+          newOrder: import("@/types").OrderHistoryEntry;
         };
+
+        const newCo2Total1 = parseFloat(newCo2Total.toFixed(1));
+        const newCo2Week   = parseFloat((get().co2SavedThisWeek  + co2SavedKg).toFixed(2));
+        const newCo2Month  = parseFloat((get().co2SavedThisMonth + co2SavedKg).toFixed(1));
+
+        // Update the persona object so Profile & Dashboard reflect the new order instantly
+        const currentPersona = get().currentPersona;
+        const updatedPersona = currentPersona
+          ? {
+              ...currentPersona,
+              orderHistory: [newOrder, ...currentPersona.orderHistory],
+              co2SavedTotal:     newCo2Total1,
+              co2SavedThisWeek:  newCo2Week,
+              co2SavedThisMonth: newCo2Month,
+            }
+          : currentPersona;
 
         set({
           cart: [],
-          co2SavedTotal: parseFloat(newCo2Total.toFixed(1)),
-          co2SavedThisWeek: parseFloat(
-            (get().co2SavedThisWeek + co2SavedKg).toFixed(2)
-          ),
-          co2SavedThisMonth: parseFloat(
-            (get().co2SavedThisMonth + co2SavedKg).toFixed(1)
-          ),
+          currentPersona: updatedPersona,
+          co2SavedTotal:     newCo2Total1,
+          co2SavedThisWeek:  newCo2Week,
+          co2SavedThisMonth: newCo2Month,
         });
 
         return co2SavedKg;

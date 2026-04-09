@@ -337,7 +337,10 @@ export default function CartPage() {
         try {
             await checkout();
             setCheckoutDone(true);
-            setTimeout(() => router.push("/dashboard"), 2000);
+            setTimeout(() => {
+                router.refresh();
+                router.push("/dashboard");
+            }, 2000);
         } catch {
             setIsCheckingOut(false);
         }

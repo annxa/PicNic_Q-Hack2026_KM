@@ -25,9 +25,9 @@ export const dbWrite: Database.Database =
         (global._picnicDbWrite = new Database(DB_PATH)));
 
 // ── Migrations ────────────────────────────────────────────────────────────────
-// Run once at startup; safe to re-run (ALTER TABLE is a no-op if column exists)
+// Run on the write connection (read-only connection can't ALTER TABLE)
 try {
-  db.prepare("ALTER TABLE orders ADD COLUMN co2_saved REAL DEFAULT 0").run();
+  dbWrite.prepare("ALTER TABLE orders ADD COLUMN co2_saved REAL DEFAULT 0").run();
 } catch {
   // Column already exists — ignore
 }
