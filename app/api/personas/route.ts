@@ -249,6 +249,7 @@ interface DbOrderRow {
   customer_id: string;
   creation_date: string;
   total_price: number;
+  co2_saved: number | null;
   sku: string;
   quantity: number;
   // article fields
@@ -330,8 +331,8 @@ function groupOrders(rows: DbOrderRow[]): OrderGroup[] {
         orderId: row.order_id,
         creationDate: row.creation_date,
         totalPrice: row.total_price,
-        // Use stored delivery CO₂; fall back to delivery-distance estimate for legacy rows
-        co2Saved: DELIVERY_CO2_FALLBACK,
+        // Use stored delivery CO₂; fall back to delivery-distance estimate for zero/legacy rows
+        co2Saved: (row.co2_saved != null && row.co2_saved > 0) ? row.co2_saved : DELIVERY_CO2_FALLBACK,
         lines: [],
       });
     }
@@ -554,6 +555,7 @@ export async function GET() {
                 o.customer_id,
                 o.creation_date,
                 o.total_price,
+                o.co2_saved,
                 ol.sku,
                 ol.quantity,
                 a.id       AS article_id,

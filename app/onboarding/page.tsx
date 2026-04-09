@@ -199,6 +199,15 @@ export default function OnboardingPage() {
             ...base,
             id: customerId,
             name: registerName.trim() || base.name,
+            // New accounts have no history or CO₂ savings yet
+            orderHistory:       [],
+            defaultCart:        [],
+            pantry:             [],
+            co2SavedTotal:      0,
+            co2SavedThisWeek:   0,
+            co2SavedThisMonth:  0,
+            defaultRestrictions: activeRestrictions,
+            defaultGoals:        activeGoals,
         };
         initPersona(customPersona);
         setHousehold({ ...base.household, size: householdSize, hasKids: hasChildren });
