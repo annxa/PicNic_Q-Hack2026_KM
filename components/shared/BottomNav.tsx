@@ -98,6 +98,27 @@ function PantryIcon({ active }: { active: boolean }) {
     );
 }
 
+function StoreIcon({ active }: { active: boolean }) {
+    const c = active ? "#E1141C" : "#9B9B9B";
+    return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M3 9.5L5 4h14l2 5.5"
+                stroke={c} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
+                fill={active ? "#FDECEA" : "none"}
+            />
+            <rect
+                x="3" y="9.5" width="18" height="11" rx="1.5"
+                stroke={c} strokeWidth="1.75"
+                fill={active ? "#FDECEA" : "none"}
+            />
+            <circle cx="16" cy="15" r="1.5" fill={c} />
+            <path d="M8 13v4" stroke={c} strokeWidth="1.75" strokeLinecap="round" />
+            <path d="M6 15h4" stroke={c} strokeWidth="1.75" strokeLinecap="round" />
+        </svg>
+    );
+}
+
 function ProfileIcon({ active }: { active: boolean }) {
     const c = active ? "#E1141C" : "#9B9B9B";
     return (
@@ -128,9 +149,9 @@ function ProfileIcon({ active }: { active: boolean }) {
 
 const NAV_ITEMS = [
     { href: "/dashboard", Icon: DiscoverIcon, label: "Discover" },
-    { href: "/cart", Icon: CartLogo, label: "Cart" },
-    /*{ href: "/pantry",    Icon: PantryIcon,   label: "Pantry" },*/
-    { href: "/profile", Icon: ProfileIcon, label: "Profile" },
+    { href: "/store",     Icon: StoreIcon,    label: "Store"    },
+    { href: "/cart",      Icon: CartLogo,     label: "Cart"     },
+    { href: "/profile",   Icon: ProfileIcon,  label: "Profile"  },
 ];
 
 export function BottomNav() {
