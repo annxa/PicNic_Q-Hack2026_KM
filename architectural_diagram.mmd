@@ -1,0 +1,87 @@
+flowchart TD
+    subgraph Client["🖥️  Browser — Next.js Client"]
+        direction TB
+        P0["/  →  redirect"]
+        P1["/onboarding\nPersona selection"]
+        P2["/dashboard\nCO₂ progress · cart CTA\nrecommendations"]
+        P3["/cart\nItems · bundles · checkout"]
+        P4["/pantry\nLow-stock tracking"]
+        P5["/profile\nOrder history · stats"]
+
+        ZS["Zustand Store\ncurrentPersona · cart · pantry\nco2SavedTotal · co2PerDelivery\nco2SavedThisWeek · co2ThisMonth"]
+        LS[("localStorage\n(persisted)")]
+        ZS <-->|hydrate / persist| LS
+    end
+
+    subgraph API["⚡  Next.js API Routes  — Node.js Server"]
+        direction TB
+        R1["GET /api/personas\nEnrich customers with order history,\npantry, CO₂ stats, bundles, meals"]
+        R2["GET /api/products\nAll available articles → Product[]"]
+        R3["GET /api/co2-distance\nOSRM fetch → CO₂ kg formula"]
+        R4["POST /api/checkout\nInsert order + orderlines\nUPDATE customers.co2"]
+        R5["POST /api/register\nInsert new customer row"]
+        R6["GET /api/cart/predict\nBuild prompt → Claude\nNext-basket prediction"]
+        R7["GET /api/packages\nMeal package catalogue"]
+        R8["GET /api/packages/suggest\nBuild prompt → Claude\nPersonalised package picks"]
+    end
+
+    subgraph DB["🗄️  SQLite  (picnic.db)"]
+        direction LR
+        T1[(customers\nid · name · co2 · diet\nhousehold · intolerances)]
+        T2[(personas\nname · tag · eco_awareness\nbrand_loyalty …)]
+        T3[(articles\nsku · name · category\nprice · carbon_footprint\nnutriscore · is_biological)]
+        T4[(orders\nid · customer_id\ncreation_date · total_price)]
+        T5[(orderlines\norder_id · sku · quantity)]
+        T6[(packages\nname · description\nquantified_ingredients)]
+        T7[(stock · fc · hub)]
+    end
+
+    subgraph Ext["🌐  External Services"]
+        OSRM["OSRM\nrouter.project-osrm.org\nRoute distance → metres"]
+        CLAUDE["Claude API\nclaude-opus-4-6\nCart prediction &\npackage suggestions"]
+    end
+
+    subgraph Python["🐍  Python Backend"]
+        SEED["backend/database/seed.py\nSQLAlchemy models\nOne-time DB seeder"]
+    end
+
+    %% Page → Store reads
+    P2 & P3 & P4 & P5 <-->|read/write| ZS
+
+    %% Page → API calls
+    P1 -->|"GET personas"| R1
+    P1 -->|"POST register"| R5
+    P2 -->|"GET personas (init)"| R1
+    P2 -->|"GET co2-distance"| R3
+    P3 -->|"GET products"| R2
+    P3 -->|"GET co2-distance"| R3
+    P3 -->|"POST checkout"| R4
+    P3 -->|"GET cart/predict"| R6
+    P3 -->|"GET packages"| R7
+    P3 -->|"GET packages/suggest"| R8
+
+    %% Store ← API responses
+    R1 -->|"Persona[] incl. co2SavedTotal\nco2ThisWeek · co2ThisMonth"| ZS
+    R3 -->|"co2PerDelivery (kg)"| ZS
+    R4 -->|"newCo2Total + co2SavedKg"| ZS
+
+    %% API → DB (reads)
+    R1 -->|read| T1 & T2 & T3 & T4 & T5 & T6
+    R2 -->|read| T3
+    R6 -->|read| T1 & T3 & T4 & T5
+    R7 & R8 -->|read| T6
+
+    %% API → DB (writes)
+    R4 -->|"INSERT orders + orderlines\nUPDATE customers.co2"| T1 & T4 & T5
+    R5 -->|"INSERT customers"| T1
+
+    %% API → External
+    R3 & R4 -->|"HTTP GET route"| OSRM
+    R6 & R8 -->|"messages.create()"| CLAUDE
+
+    %% Python seeder
+    SEED -->|"INSERT all tables"| DB
+
+    %% CO₂ formula annotation
+    OSRM -. "distance (m)\n→ ((d/1000)×2×150)/1000 kg" .-> R3
+    

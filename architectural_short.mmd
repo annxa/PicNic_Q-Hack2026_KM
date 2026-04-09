@@ -1,0 +1,45 @@
+flowchart LR
+    %% Pitch-Deck Styling
+    classDef client fill:#1e293b,stroke:#cbd5e1,stroke-width:2px,color:#f8fafc;
+    classDef api fill:#0284c7,stroke:#bae6fd,stroke-width:2px,color:#f0f9ff;
+    classDef db fill:#047857,stroke:#a7f3d0,stroke-width:2px,color:#ecfdf5;
+    classDef ext fill:#b45309,stroke:#fde68a,stroke-width:2px,color:#fffbeb;
+
+    subgraph Client ["📱 Client App (Next.js)"]
+        direction TB
+        UI["Frontend Views\n(Dashboard, Cart, Pantry)"]:::client
+        Store["Zustand State\n(CO2 Progress, Persona, Cart)"]:::client
+        UI <-->|Hydrate / Update| Store
+    end
+
+    subgraph Server ["⚡ Server / API (Node.js)"]
+        direction TB
+        CoreAPI["Core Commerce API\n(Checkout, Products, Users)"]:::api
+        SustAPI["Sustainability Engine\n(CO2 Calculation & Stats)"]:::api
+        AIAPI["AI Prediction Engine\n(Next-Basket & Packages)"]:::api
+    end
+
+    subgraph Database ["🗄️ Database"]
+        direction TB
+        DB[(SQLite: picnic.db\nUsers, Orders, Inventory)]:::db
+        PySeed["🐍 Python Seeder\n(SQLAlchemy models)"]:::db
+        PySeed -.->|"One-time init"| DB
+    end
+
+    subgraph External ["🌐 External Services"]
+        direction TB
+        OSRM["OSRM Routing API\n(Route Distances)"]:::ext
+        Claude["Claude 3 API\n(AI Cart Predictions)"]:::ext
+    end
+
+    %% Main Architecture Flow
+    Store <-->|"Syncs state"| CoreAPI
+    Store <-->|"Tracks savings"| SustAPI
+    UI -->|"Requests suggestions"| AIAPI
+
+    CoreAPI <-->|Reads / Writes| DB
+    SustAPI <-->|Reads| DB
+    AIAPI <-->|Reads| DB
+
+    SustAPI <-->|"1. Sends Coordinates\n2. Gets distance (m)\n3. Computes kg CO2"| OSRM
+    AIAPI <-->|"Sends user/cart context\nReturns personalized bundles"| Claude
